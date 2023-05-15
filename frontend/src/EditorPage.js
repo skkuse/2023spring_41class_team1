@@ -44,6 +44,10 @@ justify-content: space-around;
 padding: 7px;
 `;
 
+const TestcaseInput = styled.input`
+width:30%;
+`;
+
 const TestcaseTitle = styled.div`
 background-color:  #142430;
 display: flex;
@@ -62,6 +66,12 @@ border-left-width: 0px;
 function EditorPage() {
   const [content,setcontent] = useState(DUMMY_DATA.initial_code);
   const [executionResult, setExecutionResult] = useState('');
+  const [check,setCheck] = useState(false);
+
+  const [testcaseState,setTestcaseState] = useState(DUMMY_DATA.testCases);
+
+  const [inputValue, setInput] = useState('');
+  const [outputValue, setOutput] = useState('');
 
   //page 이동 function
   const movePage = useNavigate();
@@ -206,6 +216,44 @@ function EditorPage() {
     console.log('delete');
   }
 
+  function addTestcase(){
+    setCheck(true);
+  }
+
+  function submitTestcase(){
+
+    if (inputValue=='' || outputValue=='' ){
+      alert('입력값 및 기댓값을 채워주세요!');
+      return;
+    }
+
+    console.log(inputValue,outputValue);
+    
+    var newValue = {id : testcaseState.length+1 , input: inputValue, output: outputValue};
+    
+    var temp = testcaseState;
+
+    temp.push(newValue);
+
+    setTestcaseState(temp);
+    
+    setInput('');
+    setOutput('');
+
+
+    setCheck(false);
+  }
+
+  const saveInputValue = event => {
+    setInput(event.target.value);
+    // console.log(event.target.value);
+  };
+
+  const saveOutputValue = event => {
+    setOutput(event.target.value);
+    // console.log(event.target.value);
+  };
+
   
 
 
@@ -237,19 +285,41 @@ function EditorPage() {
           </div>
           <TestcaseTitle >
             <p >테스트 케이스</p>
-            <CusButton> 테스트 케이스 추가</CusButton>
+            <CusButton onClick={addTestcase}> 테스트 케이스 추가</CusButton>
           </TestcaseTitle>
+          {check && <TestCase className='testcase'>
+              <TestcaseInput type='text' value={inputValue} onChange={saveInputValue} placeholder='입력값'></TestcaseInput>
+              <TestcaseInput type='text' value={outputValue} onChange={saveOutputValue} placeholder='기댓값'></TestcaseInput>
+              <div>
+              <CusButton onClick={submitTestcase}>추가</CusButton>
+              </div>
+              
+            </TestCase>}
           <div className='testcaseList'>
           <div className='testcaseContainer'>
-            <TestCase className='testcase'>
-              <p>테스테 케이스 1</p>
+            {testcaseState.map((testcaseState)=>(
+              
+              <div>
+              <TestCase className='testcase'>
+              <p>테스테 케이스 {testcaseState.id}</p>
+              <div>
+              <CusButton onClick={test}>테스트</CusButton>
+              {/* <CusButton onClick={deleteTestcase}>삭제</CusButton> */}
+              </div>
+              
+              </TestCase>
+              <p>입력값 : {testcaseState.input}       기댓값 : {testcaseState.output} </p>
+              </div>
+            ))}
+            {/* <TestCase className='testcase'>
+              <p>테스테 케이스 {testcaseState[0].id}</p>
               <div>
               <CusButton onClick={test}>테스트</CusButton>
               <CusButton onClick={deleteTestcase}>삭제</CusButton>
               </div>
               
             </TestCase>
-            <p>입력값 : {DUMMY_DATA.testCases[0].input}       기댓값 : {DUMMY_DATA.testCases[0].output} </p>
+            <p>입력값 : {testcaseState[0].input}       기댓값 : {testcaseState[0].output} </p>
           </div>
           <div className='testcaseContainer'>
             <TestCase className='testcase'>
@@ -259,7 +329,7 @@ function EditorPage() {
               <CusButton onClick={deleteTestcase}>삭제</CusButton>
               </div>
             </TestCase>
-            <p>입력값 : {DUMMY_DATA.testCases[1].input}       기댓값 : {DUMMY_DATA.testCases[1].output} </p>
+            <p>입력값 : {DUMMY_DATA.testCases[1].input}       기댓값 : {DUMMY_DATA.testCases[1].output} </p> */}
           </div>
           
           

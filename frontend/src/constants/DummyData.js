@@ -4,8 +4,8 @@ export const DUMMY_DATA = {
   constraint:
     "첫째 줄에 정수 N(0 ≤ N ≤ 12)이 주어진다.\n첫째 줄에 N!을 출력한다.",
   testCases: [
-    { input: 10, output: 3628800 },
-    { input: 0, output: 1 },
+    { id: 1,input: 10, output: 3628800 },
+    { id : 2, input: 0, output: 1 },
   ],
   initial_code : '#include <stdio.h>    \nint main() {\n\tint N, fact=1;\n\tscanf("%d", &N);\n\tfor(int i=1; i<=N; i++) {\n\t\tfact *= i;\n\t}\n\tprintf("%d", fact);\n\treturn 0;\n}',
   execution_result : 'Traceback (most recent call last): File "c:projectspylib raceback_sample.py", line 14, in main b() File "c:projectspylib raceback_sample.py", line 9, in b a() File "c:projectspylib raceback_sample.py", line 5, in a return 1/0 ZeroDivisionError: division by zero',
