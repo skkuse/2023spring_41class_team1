@@ -12,9 +12,6 @@ body {
     flex-grow: 1;
 }
 
-.questionDetail{
-    margin:0;
-}
 
 .left{
     height: 100%;
@@ -83,4 +80,8 @@ body {
     border-width: 3px;
     border-left-width: 0px;
     border-color: #0C151C; */
+}
+
+.testcase CusButton {
+    margin: 2px;
 }

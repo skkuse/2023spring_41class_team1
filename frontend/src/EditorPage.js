@@ -21,7 +21,7 @@ margin-top: 5px;
 
 const CusButton = styled.button`
 
-margin: 0;
+margin: 2px;
 border: none;
 cursor: pointer;
 font-family: "Noto Sans KR", sans-serif;
@@ -44,11 +44,26 @@ justify-content: space-around;
 padding: 7px;
 `;
 
+const TestcaseTitle = styled.div`
+background-color:  #142430;
+display: flex;
+justify-content: space-around;
+padding: 7px;
+border-color: #061523;
+border-style: solid;
+border-width: 3px;
+border-top-width: 3x;
+border-right-width: 0px;
+border-left-width: 0px;
+`;
+
+
 
 function EditorPage() {
   const [content,setcontent] = useState(DUMMY_DATA.initial_code);
   const [executionResult, setExecutionResult] = useState('');
 
+  //page 이동 function
   const movePage = useNavigate();
 
   const editorRef = useRef(null);
@@ -57,33 +72,64 @@ function EditorPage() {
     editorRef.current = editor;
   }
 
+
+  //reload button
+  //사용자가 해당 문제에 대하여 저장하였던 코드를 불러와 Editor에 표시한다.
+  function reload(){
+    // reloadCode 에 저장된 코드 text 형태로 저장
+    let reloadCode = DUMMY_DATA.initial_code;
+
+    //editor에 setValue 로 저장된 text 표시 
+    editorRef.current.setValue(reloadCode);
+  }
+
+  //submit 버튼
+  //submit을 하면 자동으로 코드가 저장된다.
   function submit(){
+    //코드 저장
+    save();
+
+    //코드 backend에 전송
     console.log('submit')
+
+    //result page로 이동
     movePage('/resultView');
   }
 
+  //save button
+  //editor 화면에 있는 text를 DB에 저장한다.
   function save(){
+    //현재 코드 저장
     savedCode = editorRef.current.getValue();
     alert('저장되었습니다.');
+
+    //코드 백엔드에 보내기
     console.log(savedCode);
   }
 
+  //execute 기능
   function execute(){
 
-    console.log(editorRef.current.getValue());
+    //현재 코드 백엔드로 보내기
+    let savedCode = editorRef.current.getValue();
+    console.log(savedCode);
     alert('코드 백엔드로 보내기');
 
     // 결과 받기
     let result = DUMMY_DATA.execution_result;
-    setExecutionResult(result);
 
+    //실행결과 창에 output 표시
+    setExecutionResult(result);
   }
 
+  //hint button
+  //문제 유행 알려주는 기틍
   function hint(){
     var hint_txt = DUMMY_DATA.hint;
     alert(hint_txt + ' 문제 입니다!')
   }
 
+  //useconfirm 수정 필요 x
   const useConfirm = (message = null, onConfirm, onCancel) => {
     if (!onConfirm || typeof onConfirm !== "function") {
       return;
@@ -101,6 +147,7 @@ function EditorPage() {
     return confirmAction;
   };
 
+  ////////////////// reset 기능 ///////////////////////
   const deleteConfirm = () => {
     editorRef.current.setValue(DUMMY_DATA.initial_code);
     alert("초기화했습니다.");
@@ -111,17 +158,35 @@ function EditorPage() {
     deleteConfirm,
     cancelConfirm
   );
-  
+  /////////////////////////////////////////////////////
+
+
+  ///////////////////////// home 기능 //////////////////////
+  const homecancelConfirm = () => {
+    movePage('/');
+  }
+
   const homeConfirm = () => {
-    editorRef.current.setValue(DUMMY_DATA.initial_code);
-    alert("** 홈으로 돌아가는 함수 구현.");
+    //현재 에디터에 있는 텍스트 savedCode에 저장
+    let savedCode = editorRef.current.getValue();
+
+    //savedCode 에 있는 텍스트 user DB에 저장
+
+    //홈으로 돌아가는 코드 구현
+    movePage('/');
+
+    // alert("** 홈으로 돌아가는 함수 구현.");
   }
   const goHome = useConfirm(
-    "홈으로 돌아가시겠습니까?",
+    "변경사항을 저장하시겠습니까?",
     homeConfirm,
-    cancelConfirm
+    homecancelConfirm
   )
+  ///////////////////////////////////////////////////////////
 
+
+  //테스트 버튼
+  //테스트 케이스마다 
   function test(){
     execute();
     // DUMMY_DATA.testCases 의 input 과 output backend에 전달
@@ -134,9 +199,14 @@ function EditorPage() {
       alert('성공!');
     else
       alert('실패');
-    
-
   }
+
+  //삭제 버튼
+  function deleteTestcase(){
+    console.log('delete');
+  }
+
+  
 
 
 
@@ -144,44 +214,58 @@ function EditorPage() {
   return (
     <CusBody>
       <Navigation>
-        <CusButton onClick={goHome}>Home</CusButton>
+        <CusButton onClick={goHome}>HOME</CusButton>
         <CusButton onClick={save}>SAVE</CusButton>
-        <CusButton onClick={reset}> ReSET</CusButton>
+        <CusButton onClick={reload}>RELOAD</CusButton>
+        <CusButton onClick={reset}> RESET</CusButton>
         <CusButton onClick={submit}>SUBMIT</CusButton>
       </Navigation>
 
       <div className='container'>
         <div className='left'>
           <div className='title'>
-          <TestCase className='testcase'>
-              <h2>문제</h2>
+          <TestcaseTitle className='testcase'>
+              <p>문제</p>
               <CusButton onClick={hint} >HINT</CusButton>
-          </TestCase>
+          </TestcaseTitle>
+          
             <h2 className='questionDetail'>{DUMMY_DATA.question}</h2>
           </div>
           <div className='constraint'>
             <p>참조 제약 사항</p>
             <p>{DUMMY_DATA.constraint}</p>
           </div>
-          <div className='testcaseTitle'>
+          <TestcaseTitle >
             <p >테스트 케이스</p>
-            {/* <CusButton> 테스트 케이스 추가</CusButton> */}
-          </div>
-          
+            <CusButton> 테스트 케이스 추가</CusButton>
+          </TestcaseTitle>
+          <div className='testcaseList'>
           <div className='testcaseContainer'>
             <TestCase className='testcase'>
               <p>테스테 케이스 1</p>
+              <div>
               <CusButton onClick={test}>테스트</CusButton>
+              <CusButton onClick={deleteTestcase}>삭제</CusButton>
+              </div>
+              
             </TestCase>
             <p>입력값 : {DUMMY_DATA.testCases[0].input}       기댓값 : {DUMMY_DATA.testCases[0].output} </p>
           </div>
           <div className='testcaseContainer'>
             <TestCase className='testcase'>
               <p>테스테 케이스 2</p>
+              <div>
               <CusButton onClick={test}>테스트</CusButton>
+              <CusButton onClick={deleteTestcase}>삭제</CusButton>
+              </div>
             </TestCase>
             <p>입력값 : {DUMMY_DATA.testCases[1].input}       기댓값 : {DUMMY_DATA.testCases[1].output} </p>
           </div>
+          
+          
+
+          </div>
+          
         </div>
         <div className='right'>
 
@@ -198,7 +282,6 @@ function EditorPage() {
         <div className='executionResult'>
           <div className='executionTitleContainer'>
             <p className='executionTitle'>실행 결과</p>
-            <CusButton onClick={execute}>실행</CusButton>
           </div>
           
           <p className='executionDetail'>{executionResult}</p>

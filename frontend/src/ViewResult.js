@@ -20,11 +20,17 @@ const ResulDetail = styled.div`
   text-align : center;
 `;
 
+const ButtonContainer = styled.div`
+  text-align : center;
+  // display: flex;
+`;
+
 
 
 const ResultButton = styled.button`
 
-margin: 0;
+margin-left: 40px;
+margin-right : 40px;
 border: none;
 cursor: pointer;
 font-family: "Noto Sans KR", sans-serif;
@@ -49,6 +55,11 @@ function ViewResult(){
         movePage('/')
     }
 
+    function goEditor(){
+      alert('go Editor');
+      movePage('/');
+    }
+
     return(
         <ResultContainer>
             <ResultTitle > RESULT </ResultTitle>
@@ -64,8 +75,12 @@ function ViewResult(){
             <br></br>
             <br></br>
             <br></br>
-            
+            <ButtonContainer>
+            <ResultButton onClick={goEditor}> Go Back to Editor</ResultButton>
             <ResultButton onClick={goHome}> Go Home</ResultButton>
+
+            </ButtonContainer>
+            
             </ResulDetail>
 
 
