@@ -1,7 +1,7 @@
-import {useState,useRef} from 'react'
+import {useState,useRef,useEffect} from 'react'
 import { Editor } from '@monaco-editor/react';
 import "./App.css";
-import { useNavigate } from 'react-router-dom';
+import { json, useNavigate } from 'react-router-dom';
 import {DUMMY_DATA} from "./constants/DummyData"
 import styled from "styled-components";
 
@@ -117,21 +117,6 @@ function EditorPage() {
     console.log(savedCode);
   }
 
-  //execute 기능
-  function execute(){
-
-    //현재 코드 백엔드로 보내기
-    let savedCode = editorRef.current.getValue();
-    console.log(savedCode);
-    alert('코드 백엔드로 보내기');
-
-    // 결과 받기
-    let result = DUMMY_DATA.execution_result;
-
-    //실행결과 창에 output 표시
-    setExecutionResult(result);
-  }
-
   //hint button
   //문제 유행 알려주는 기틍
   function hint(){
@@ -177,6 +162,8 @@ function EditorPage() {
   }
 
   const homeConfirm = () => {
+    localStorage.setItem("testcaseState",JSON.stringify([]));
+
     //현재 에디터에 있는 텍스트 savedCode에 저장
     let savedCode = editorRef.current.getValue();
 
@@ -198,17 +185,26 @@ function EditorPage() {
   //테스트 버튼
   //테스트 케이스마다 
   function test(){
-    execute();
+    //현재 코드 백엔드로 보내기
+    let savedCode = editorRef.current.getValue();
+    let savedTestcase = testcaseState;
+    console.log(savedTestcase);
+
+
+    alert('코드 백엔드로 보내기');
+
+    // 결과 받기
+    let result = DUMMY_DATA.execution_result;
+
+    //실행결과 창에 output 표시
+
+    var correctNum = result;
+    var executeresult = '정답코드로 실행한 결과\n 총 테스트 케이스 중 '+correctNum+'개 정답';
+
+    setExecutionResult(executeresult);
     // DUMMY_DATA.testCases 의 input 과 output backend에 전달
 
-    // backend 로부터 성공 실패 여부 testResult에 저장
-    let testResult = true;
-
-
-    if (testResult)
-      alert('성공!');
-    else
-      alert('실패');
+    
   }
 
   function addTestcase(){
@@ -224,13 +220,14 @@ function EditorPage() {
 
     console.log(inputValue,outputValue);
     
-    var newValue = {id : testcaseState.length+1 , input: inputValue, output: outputValue};
+    var newValue = {input: inputValue, output: outputValue};
     
     var temp = testcaseState;
 
     temp.push(newValue);
 
     setTestcaseState(temp);
+    localStorage.setItem("testcaseState",JSON.stringify(temp));
     
     setInput('');
     setOutput('');
@@ -248,6 +245,37 @@ function EditorPage() {
     setOutput(event.target.value);
     // console.log(event.target.value);
   };
+
+  //정답 코드로 테스트 실행
+  function correctTest(){
+    var correctNum = 5;
+    var executeresult = '정답코드로 실행한 결과\n 총 테스트 케이스 중 '+correctNum+'개 정답';
+
+    setExecutionResult(executeresult);
+  }
+
+  const handleDelete = (index) =>{
+    setTestcaseState((prev) => {
+      const newTestcaseState = prev.filter((prev,ind) => ind !==index);
+      localStorage.setItem("testcaseState",JSON.stringify(newTestcaseState));
+      return newTestcaseState;
+    });
+    console.log(testcaseState);
+
+  }
+
+  // useEffect(() => {
+  //   const savedTestcase = localStorage.getItem("testcaseState");
+  //   if(savedTestcase.length > 0){
+  //     setTestcaseState(JSON.parse(savedTestcase));
+  //   }
+  //   else{
+  //     console.log('hello' , DUMMY_DATA.testCases);
+  //     setTestcaseState(DUMMY_DATA.testCases);
+  //   }
+  // })
+
+
 
   
 
@@ -292,39 +320,25 @@ function EditorPage() {
             </TestCase>}
           <div className='testcaseList'>
           <div className='testcaseContainer'>
-            {testcaseState.map((testcaseState)=>(
+            {testcaseState.map((testcaseStateDetail, index)=>(
               
               <div>
               <TestCase className='testcase'>
-              <p>테스테 케이스 {testcaseState.id}</p>
+              <p>테스테 케이스 {index+1}</p>
               <div>
-              <CusButton onClick={test}>테스트</CusButton>
+              <CusButton onClick={()=>handleDelete(index)}>삭제</CusButton>
               {/* <CusButton onClick={deleteTestcase}>삭제</CusButton> */}
               </div>
               
               </TestCase>
-              <p>입력값 : {testcaseState.input}       기댓값 : {testcaseState.output} </p>
+              <p>입력값 : {testcaseStateDetail.input}       기댓값 : {testcaseStateDetail.output} </p>
               </div>
             ))}
-            {/* <TestCase className='testcase'>
-              <p>테스테 케이스 {testcaseState[0].id}</p>
-              <div>
-              <CusButton onClick={test}>테스트</CusButton>
-              <CusButton onClick={deleteTestcase}>삭제</CusButton>
-              </div>
-              
-            </TestCase>
-            <p>입력값 : {testcaseState[0].input}       기댓값 : {testcaseState[0].output} </p>
-          </div>
-          <div className='testcaseContainer'>
-            <TestCase className='testcase'>
-              <p>테스테 케이스 2</p>
-              <div>
-              <CusButton onClick={test}>테스트</CusButton>
-              <CusButton onClick={deleteTestcase}>삭제</CusButton>
-              </div>
-            </TestCase>
-            <p>입력값 : {DUMMY_DATA.testCases[1].input}       기댓값 : {DUMMY_DATA.testCases[1].output} </p> */}
+            <div className='flexSpacearound'>
+            <CusButton onClick={test}> 현재 코드로 테스트 실행</CusButton>
+            <CusButton onClick={correctTest}> 정답 코드로 테스트 실행</CusButton>
+            </div>
+            
           </div>
           
           

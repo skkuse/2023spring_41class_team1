@@ -130,3 +130,8 @@ body {
 .testcase CusButton {
     margin: 2px;
 }
+
+.flexSpacearound{
+  display: flex;
+  justify-content: space-around;
+}
