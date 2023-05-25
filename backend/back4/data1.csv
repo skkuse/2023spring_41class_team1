@@ -1,0 +1,2582 @@
+﻿,main_level,main_level_tag,sub_level,sub_level_tag,problem_idx,problem_comment,input_comment,output_comment,sample_data,chatGPT_output_code
+0,17,조합론,3,팩토리얼,10872,"0보다 크거나 같은 정수 N이 주어진다. 이때, N!을 출력하는 프로그램을 작성하시오.",첫째 줄에 정수 N(0 ≤ N ≤ 12)이 주어진다.,첫째 줄에 N!을 출력한다.,"[['10', '3628800'], ['0', '1']]","#include <stdio.h>
+
+int main() {
+    int N, fact=1;
+    scanf(""%d"", &N);
+    for(int i=1; i<=N; i++) {
+        fact *= i;
+    }
+    printf(""%d"", fact);
+    return 0;
+}"
+1,17,조합론,5,다리 놓기,1010,재원이는 한 도시의 시장이 되었다. 이 도시에는 도시를 동쪽과 서쪽으로 나누는 큰 일직선 모양의 강이 흐르고 있다. 하지만 재원이는 다리가 없어서 시민들이 강을 건너는데 큰 불편을 겪고 있음을 알고 다리를 짓기로 결심하였다. 강 주변에서 다리를 짓기에 적합한 곳을 사이트라고 한다. 재원이는 강 주변을 면밀히 조사해 본 결과 강의 서쪽에는 N개의 사이트가 있고 동쪽에는 M개의 사이트가 있다는 것을 알았다. (N ≤ M),"입력의 첫 줄에는 테스트 케이스의 개수 T가 주어진다. 그 다음 줄부터 각각의 테스트케이스에 대해 강의 서쪽과 동쪽에 있는 사이트의 개수 정수 N, M (0 < N ≤ M < 30)이 주어진다.",각 테스트 케이스에 대해 주어진 조건하에 다리를 지을 수 있는 경우의 수를 출력한다.,"[['3\n2 2\n1 5\n13 29', '1\n5\n67863915']]","#include <stdio.h>
+
+int main() {
+    int T, i;
+    scanf(""%d"", &T); // 테스트 케이스의 개수 입력
+    for(i=0; i<T; i++) {
+        int N, M, j;
+        scanf(""%d %d"", &N, &M); // 각각의 테스트 케이스에 대해 강의 서쪽과 동쪽에 있는 사이트의 개수 입력
+        int dp[31][31] = {0}; // 다리를 지을 수 있는 경우의 수를 저장할 DP 배열 초기화
+        for(j=1; j<=M; j++) dp[1][j] = j; // 초기값 설정
+        for(j=2; j<=N; j++) {
+            for(int k=j; k<=M; k++) {
+                for(int l=j-1; l<k; l++) {
+                    dp[j][k] += dp[j-1][l]; // 점화식 적용
+                }
+            }
+        }
+        printf(""%d\n"", dp[N][M]); // 각각의 테스트 케이스에 대해 다리를 지을 수 있는 경우의 수 출력
+    }
+    return 0;
+}"
+2,19,스택,1,스택,10828,"정수를 저장하는 스택을 구현한 다음, 입력으로 주어지는 명령을 처리하는 프로그램을 작성하시오.","첫째 줄에 주어지는 명령의 수 N (1 ≤ N ≤ 10,000)이 주어진다. 둘째 줄부터 N개의 줄에는 명령이 하나씩 주어진다. 주어지는 정수는 1보다 크거나 같고, 100,000보다 작거나 같다. 문제에 나와있지 않은 명령이 주어지는 경우는 없다.","출력해야하는 명령이 주어질 때마다, 한 줄에 하나씩 출력한다.","[['14\npush 1\npush 2\ntop\nsize\nempty\npop\npop\npop\nsize\nempty\npop\npush 3\nempty\ntop', '2\n2\n0\n2\n1\n-1\n0\n1\n-1\n0\n3'], ['7\npop\ntop\npush 123\ntop\npop\ntop\npop', '-1\n-1\n123\n123\n-1\n-1']]","#include <stdio.h>
+#include <string.h>
+
+#define MAX_SIZE 10000
+
+int stack[MAX_SIZE]; // 스택 선언
+int top = -1; // 스택의 가장 위쪽 원소를 가리키는 인덱스. 초기값은 -1.
+
+void push(int x) { // 스택에 x를 삽입하는 함수
+    stack[++top] = x;
+}
+
+int pop() { // 스택에서 가장 위쪽 원소를 삭제하고 반환하는 함수
+    if (top == -1) { // 스택이 비어있는 경우
+        return -1;
+    }
+    else {
+        return stack[top--];
+    }
+}
+
+int size() { // 스택의 원소 개수를 반환하는 함수
+    return top + 1;
+}
+
+int empty() { // 스택이 비어있으면 1, 아니면 0을 반환하는 함수
+    if (top == -1) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+int top_func() { // 스택의 가장 위쪽 원소를 반환하는 함수
+    if (top == -1) { // 스택이 비어있는 경우
+        return -1;
+    }
+    else {
+        return stack[top];
+    }
+}
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+    for (int i = 0; i < n; i++) {
+        char command[10];
+        scanf(""%s"", command);
+        if (strcmp(command, ""push"") == 0) { // push 명령인 경우
+            int x;
+            scanf(""%d"", &x);
+            push(x);
+        }
+        else if (strcmp(command, ""pop"") == 0) { // pop 명령인 경우
+            printf(""%d\n"", pop());
+        }
+        else if (strcmp(command, ""size"") == 0) { // size 명령인 경우
+            printf(""%d\n"", size());
+        }
+        else if (strcmp(command, ""empty"") == 0) { // empty 명령인 경우
+            printf(""%d\n"", empty());
+        }
+        else if (strcmp(command, ""top"") == 0) { // top 명령인 경우
+            printf(""%d\n"", top_func());
+        }
+    }
+    return 0;
+}"
+3,21,재귀,1,팩토리얼 2,27433,"0보다 크거나 같은 정수 N이 주어진다. 이때, N!을 출력하는 프로그램을 작성하시오.",첫째 줄에 정수 N(0 ≤ N ≤ 20)이 주어진다.,첫째 줄에 N!을 출력한다.,"[['10', '3628800'], ['0', '1']]","#include <stdio.h>
+
+int main() {
+    int N;
+    long long answer = 1; // N!의 결과를 저장할 변수
+
+    scanf(""%d"", &N);
+
+    for (int i = 2; i <= N; i++) {
+        answer *= i; // i를 곱해서 N!을 계산한다
+    }
+
+    printf(""%lld\n"", answer);
+
+    return 0;
+}"
+4,23,동적 계획법 1,3,01타일,1904,"지원이에게 2진 수열을 가르쳐 주기 위해, 지원이 아버지는 그에게 타일들을 선물해주셨다. 그리고 이 각각의 타일들은 0 또는 1이 쓰여 있는 낱장의 타일들이다.","첫 번째 줄에 자연수 N이 주어진다. (1 ≤ N ≤ 1,000,000)",첫 번째 줄에 지원이가 만들 수 있는 길이가 N인 모든 2진 수열의 개수를 15746으로 나눈 나머지를 출력한다.,"[['4', '5']]","#include <stdio.h>
+
+int dp[1000001];
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+    dp[1] = 1;
+    dp[2] = 2;
+    for(int i=3; i<=n; i++) {
+        dp[i] = (dp[i-1] + dp[i-2]) % 15746;
+    }
+    printf(""%d"", dp[n]);
+    return 0;
+}"
+5,23,동적 계획법 1,5,연속합,1912,"n개의 정수로 이루어진 임의의 수열이 주어진다. 우리는 이 중 연속된 몇 개의 수를 선택해서 구할 수 있는 합 중 가장 큰 합을 구하려고 한다. 단, 수는 한 개 이상 선택해야 한다.","첫째 줄에 정수 n(1 ≤ n ≤ 100,000)이 주어지고 둘째 줄에는 n개의 정수로 이루어진 수열이 주어진다. 수는 -1,000보다 크거나 같고, 1,000보다 작거나 같은 정수이다.",첫째 줄에 답을 출력한다.,"[['10\n10 -4 3 1 5 6 -35 12 21 -1', '33'], ['10\n2 1 -4 3 4 -4 6 5 -5 1', '14'], ['5\n-1 -2 -3 -4 -5', '-1']]","#include <stdio.h>
+
+int main() {
+    int n, max_sum, current_sum, num;
+    scanf(""%d"", &n);
+    scanf(""%d"", &num);
+    max_sum = current_sum = num;
+    for (int i = 1; i < n; i++) {
+        scanf(""%d"", &num);
+        current_sum = (current_sum > 0) ? current_sum + num : num;
+        if (current_sum > max_sum) {
+            max_sum = current_sum;
+        }
+    }
+    printf(""%d\n"", max_sum);
+    return 0;
+}"
+6,23,동적 계획법 1,7,정수 삼각형,1932,위 그림은 크기가 5인 정수 삼각형의 한 모습이다.,"첫째 줄에 삼각형의 크기 n(1 ≤ n ≤ 500)이 주어지고, 둘째 줄부터 n+1번째 줄까지 정수 삼각형이 주어진다.",첫째 줄에 합이 최대가 되는 경로에 있는 수의 합을 출력한다.,"[['5\n7\n3 8\n8 1 0\n2 7 4 4\n4 5 2 6 5', '30']]","#include <stdio.h>
+
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    int triangle[n][n];
+
+    // 삼각형 입력 받기
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j <= i; j++) {
+            scanf(""%d"", &triangle[i][j]);
+        }
+    }
+
+    // DP를 이용하여 합이 최대가 되는 경로의 합 구하기
+    for (int i = n-2; i >= 0; i--) {
+        for (int j = 0; j <= i; j++) {
+            triangle[i][j] += max(triangle[i+1][j], triangle[i+1][j+1]);
+        }
+    }
+
+    printf(""%d\n"", triangle[0][0]);
+
+    return 0;
+}"
+7,23,동적 계획법 1,11,포도주 시식,2156,"효주는 포도주 시식회에 갔다. 그 곳에 갔더니, 테이블 위에 다양한 포도주가 들어있는 포도주 잔이 일렬로 놓여 있었다. 효주는 포도주 시식을 하려고 하는데, 여기에는 다음과 같은 두 가지 규칙이 있다.","첫째 줄에 포도주 잔의 개수 n이 주어진다. (1 ≤ n ≤ 10,000) 둘째 줄부터 n+1번째 줄까지 포도주 잔에 들어있는 포도주의 양이 순서대로 주어진다. 포도주의 양은 1,000 이하의 음이 아닌 정수이다.",첫째 줄에 최대로 마실 수 있는 포도주의 양을 출력한다.,"[['6\n6\n10\n13\n9\n8\n1', '33']]","#include <stdio.h>
+
+int max(int a, int b) {
+    return a > b ? a : b; // a와 b 중 더 큰 값을 반환하는 함수
+}
+
+int main() {
+    int n, i;
+    int grape[10001] = {0}; // 포도주의 양을 저장하는 배열
+    int dp[10001] = {0}; // 다이나믹 프로그래밍을 위한 배열
+
+    scanf(""%d"", &n);
+
+    for (i = 1; i <= n; i++) {
+        scanf(""%d"", &grape[i]);
+    }
+
+    dp[1] = grape[1]; // 첫 번째 잔은 무조건 마시므로 dp[1]에 초기값 할당
+    dp[2] = grape[1] + grape[2]; // 두 번째 잔도 마시는 것이 최대이므로 초기값 할당
+
+    for (i = 3; i <= n; i++) {
+        // 경우의 수 3가지 중 가장 큰 값으로 dp[i]를 갱신
+        dp[i] = max(max(dp[i-1], dp[i-2]+grape[i]), dp[i-3]+grape[i-1]+grape[i]);
+    }
+
+    printf(""%d\n"", dp[n]);
+
+    return 0;
+}"
+8,23,동적 계획법 1,13,가장 긴 바이토닉 부분 수열,11054,"수열 S가 어떤 수 Sk를 기준으로 S1 < S2 < ... Sk-1 < Sk > Sk+1 > ... SN-1 > SN을 만족한다면, 그 수열을 바이토닉 수열이라고 한다.","첫째 줄에 수열 A의 크기 N이 주어지고, 둘째 줄에는 수열 A를 이루고 있는 Ai가 주어진다. (1 ≤ N ≤ 1,000, 1 ≤ Ai ≤ 1,000)",첫째 줄에 수열 A의 부분 수열 중에서 가장 긴 바이토닉 수열의 길이를 출력한다.,"[['10\n1 5 2 1 4 3 4 5 2 1', '7']]","#include <stdio.h>
+
+int main() {
+    int n, i, j;
+    int a[1001];
+    int inc[1001] = {0}; // 증가 수열 길이 저장 배열
+    int dec[1001] = {0}; // 감소 수열 길이 저장 배열
+    int max = 0;
+
+    scanf(""%d"", &n);
+    for(i=0; i<n; i++) {
+        scanf(""%d"", &a[i]);
+    }
+
+    // 증가 수열 길이 구하기
+    for(i=0; i<n; i++) {
+        for(j=0; j<i; j++) {
+            if(a[i] > a[j] && inc[i] < inc[j]) {
+                inc[i] = inc[j];
+            }
+        }
+        inc[i]++;
+    }
+
+    // 감소 수열 길이 구하기
+    for(i=n-1; i>=0; i--) {
+        for(j=n-1; j>i; j--) {
+            if(a[i] > a[j] && dec[i] < dec[j]) {
+                dec[i] = dec[j];
+            }
+        }
+        dec[i]++;
+    }
+
+    // 가장 긴 바이토닉 수열 길이 구하기
+    for(i=0; i<n; i++) {
+        if(max < inc[i] + dec[i] - 1) {
+            max = inc[i] + dec[i] - 1;
+        }
+    }
+
+    printf(""%d"", max);
+
+    return 0;
+}"
+9,23,동적 계획법 1,15,LCS,9251,"LCS(Longest Common Subsequence, 최장 공통 부분 수열)문제는 두 수열이 주어졌을 때, 모두의 부분 수열이 되는 수열 중 가장 긴 것을 찾는 문제이다.","첫째 줄과 둘째 줄에 두 문자열이 주어진다. 문자열은 알파벳 대문자로만 이루어져 있으며, 최대 1000글자로 이루어져 있다.",첫째 줄에 입력으로 주어진 두 문자열의 LCS의 길이를 출력한다.,"[['ACAYKP\nCAPCAK', '4']]","#include <stdio.h>
+#include <string.h>
+
+int lcs[1001][1001];
+
+int max(int a, int b) {
+    return a > b ? a : b;
+}
+
+int main() {
+    char str1[1001], str2[1001];
+    scanf(""%s %s"", str1, str2);
+
+    int len1 = strlen(str1);
+    int len2 = strlen(str2);
+
+    for (int i = 1; i <= len1; i++) {
+        for (int j = 1; j <= len2; j++) {
+            if (str1[i - 1] == str2[j - 1]) {
+                lcs[i][j] = lcs[i - 1][j - 1] + 1;
+            } else {
+                lcs[i][j] = max(lcs[i][j - 1], lcs[i - 1][j]);
+            }
+        }
+    }
+
+    printf(""%d\n"", lcs[len1][len2]);
+
+    return 0;
+}"
+10,25,그리디 알고리즘,1,동전 0,11047,"준규가 가지고 있는 동전은 총 N종류이고, 각각의 동전을 매우 많이 가지고 있다.","첫째 줄에 N과 K가 주어진다. (1 ≤ N ≤ 10, 1 ≤ K ≤ 100,000,000)",첫째 줄에 K원을 만드는데 필요한 동전 개수의 최솟값을 출력한다.,"[['10 4200\n1\n5\n10\n50\n100\n500\n1000\n5000\n10000\n50000', '6'], ['10 4790\n1\n5\n10\n50\n100\n500\n1000\n5000\n10000\n50000', '12']]","#include <stdio.h>
+
+int main(){
+    int n, k, i;
+    int coin[10];
+    int count = 0;
+    scanf(""%d %d"", &n, &k);
+    for(i=0;i<n;i++){
+        scanf(""%d"", &coin[i]);
+    }
+    for(i=n-1;i>=0;i--){
+        count += k/coin[i];
+        k %= coin[i];
+    }
+    printf(""%d"", count);
+    return 0;
+}"
+11,25,그리디 알고리즘,3,ATM,11399,"인하은행에는 ATM이 1대밖에 없다. 지금 이 ATM앞에 N명의 사람들이 줄을 서있다. 사람은 1번부터 N번까지 번호가 매겨져 있으며, i번 사람이 돈을 인출하는데 걸리는 시간은 Pi분이다.","첫째 줄에 사람의 수 N(1 ≤ N ≤ 1,000)이 주어진다. 둘째 줄에는 각 사람이 돈을 인출하는데 걸리는 시간 Pi가 주어진다. (1 ≤ Pi ≤ 1,000)",첫째 줄에 각 사람이 돈을 인출하는데 필요한 시간의 합의 최솟값을 출력한다.,"[['5\n3 1 4 3 2', '32']]","#include <stdio.h>
+
+void quickSort(int arr[], int left, int right); // 퀵 정렬 함수 선언
+
+int main() {
+    int n, sum = 0;
+    scanf(""%d"", &n); // 사람 수 입력
+    int p[n]; // 사람별 인출 시간을 저장하는 배열
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &p[i]); // 각 사람의 인출 시간 입력
+    }
+    quickSort(p, 0, n-1); // 퀵 정렬로 오름차순 정렬
+    for (int i = 0; i < n; i++) {
+        sum += p[i]*(n-i); // 각 사람의 인출 시간과 대기 시간을 곱해서 합산
+    }
+    printf(""%d"", sum); // 결과 출력
+    return 0;
+}
+
+void quickSort(int arr[], int left, int right) { // 퀵 정렬 함수 구현
+    int i = left, j = right;
+    int pivot = arr[(left+right)/2];
+    while (i <= j) {
+        while (arr[i] < pivot) {
+            i++;
+        }
+        while (arr[j] > pivot) {
+            j--;
+        }
+        if (i <= j) {
+            int temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+            i++;
+            j--;
+        }
+    }
+    if (left < j) {
+        quickSort(arr, left, j);
+    }
+    if (i < right) {
+        quickSort(arr, i, right);
+    }
+}"
+12,27,이분 탐색,3,랜선 자르기,1654,집에서 시간을 보내던 오영식은 박성원의 부름을 받고 급히 달려왔다. 박성원이 캠프 때 쓸 N개의 랜선을 만들어야 하는데 너무 바빠서 영식이에게 도움을 청했다.,"첫째 줄에는 오영식이 이미 가지고 있는 랜선의 개수 K, 그리고 필요한 랜선의 개수 N이 입력된다. K는 1이상 10,000이하의 정수이고, N은 1이상 1,000,000이하의 정수이다. 그리고 항상 K ≦ N 이다. 그 후 K줄에 걸쳐 이미 가지고 있는 각 랜선의 길이가 센티미터 단위의 정수로 입력된다. 랜선의 길이는 231-1보다 작거나 같은 자연수이다.",첫째 줄에 N개를 만들 수 있는 랜선의 최대 길이를 센티미터 단위의 정수로 출력한다.,"[['4 11\n802\n743\n457\n539', '200']]","#include <stdio.h>
+#define ll long long // 64비트 정수형을 위해 long long으로 정의
+
+int k, n;
+ll lan[10001];
+
+int main() {
+    scanf(""%d %d"", &k, &n);
+    for (int i = 0; i < k; i++) {
+        scanf(""%lld"", &lan[i]); // lan은 long long형 배열
+    }
+
+    ll left = 1, right = (1LL << 31) - 1; // 이분 탐색을 위한 left, right 설정
+    while (left <= right) { // 이분 탐색 시작
+        ll mid = (left + right) / 2;
+        int cnt = 0;
+        for (int i = 0; i < k; i++) {
+            cnt += lan[i] / mid; // mid 길이로 만들 수 있는 랜선 개수 누적
+        }
+        if (cnt >= n) { // n개 이상 만들 수 있는 경우
+            left = mid + 1; // mid를 키워서 최대 길이를 구하기 위해 left 업데이트
+        }
+        else { // n개 이상 만들 수 없는 경우
+            right = mid - 1; // mid를 줄여서 최대 길이를 구하기 위해 right 업데이트
+        }
+    }
+
+    printf(""%lld"", right); // 최대 길이인 right 출력
+    return 0;
+}"
+13,27,이분 탐색,5,공유기 설치,2110,"도현이의 집 N개가 수직선 위에 있다. 각각의 집의 좌표는 x1, ..., xN이고, 집 여러개가 같은 좌표를 가지는 일은 없다.","첫째 줄에 집의 개수 N (2 ≤ N ≤ 200,000)과 공유기의 개수 C (2 ≤ C ≤ N)이 하나 이상의 빈 칸을 사이에 두고 주어진다. 둘째 줄부터 N개의 줄에는 집의 좌표를 나타내는 xi (0 ≤ xi ≤ 1,000,000,000)가 한 줄에 하나씩 주어진다.",첫째 줄에 가장 인접한 두 공유기 사이의 최대 거리를 출력한다.,"[['5 3\n1\n2\n8\n4\n9', '3']]","#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+int cmp(const void *a, const void *b) {
+    return *(int*)a - *(int*)b;
+}
+
+bool is_possible(int dist, int* house, int n, int c) {
+    int cnt = 1;
+    int prev = house[0];
+    for (int i = 1; i < n; i++) {
+        if (house[i] - prev >= dist) {
+            cnt++;
+            prev = house[i];
+        }
+    }
+    return cnt >= c;
+}
+
+int main() {
+    int n, c;
+    scanf(""%d %d"", &n, &c);
+    int house[n];
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &house[i]);
+    }
+    qsort(house, n, sizeof(int), cmp);
+    int left = 1, right = house[n-1] - house[0], ans = 0;
+    while (left <= right) {
+        int mid = (left + right) / 2;
+        if (is_possible(mid, house, n, c)) {
+            ans = mid;
+            left = mid + 1;
+        }
+        else {
+            right = mid - 1;
+        }
+    }
+    printf(""%d"", ans);
+    return 0;
+}"
+14,29,동적 계획법 2,5,동전 1,2293,"n가지 종류의 동전이 있다. 각각의 동전이 나타내는 가치는 다르다. 이 동전을 적당히 사용해서, 그 가치의 합이 k원이 되도록 하고 싶다. 그 경우의 수를 구하시오. 각각의 동전은 몇 개라도 사용할 수 있다.","첫째 줄에 n, k가 주어진다. (1 ≤ n ≤ 100, 1 ≤ k ≤ 10,000) 다음 n개의 줄에는 각각의 동전의 가치가 주어진다. 동전의 가치는 100,000보다 작거나 같은 자연수이다.",첫째 줄에 경우의 수를 출력한다. 경우의 수는 231보다 작다.,"[['3 10\n1\n2\n5', '10']]","#include <stdio.h>
+#define MAX_N 100
+#define MAX_K 10000
+
+int n, k;
+int coin[MAX_N+1];
+int dp[MAX_K+1];
+
+int main() {
+    scanf(""%d %d"", &n, &k);
+    for (int i = 1; i <= n; i++) {
+        scanf(""%d"", &coin[i]);
+    }
+
+    dp[0] = 1;
+
+    for (int i = 1; i <= n; i++) {
+        for (int j = coin[i]; j <= k; j++) {
+            dp[j] += dp[j - coin[i]];
+        }
+    }
+
+    printf(""%d"", dp[k]);
+
+    return 0;
+}"
+15,31,그래프와 순회,5,바이러스,2606,신종 바이러스인 웜 바이러스는 네트워크를 통해 전파된다. 한 컴퓨터가 웜 바이러스에 걸리면 그 컴퓨터와 네트워크 상에서 연결되어 있는 모든 컴퓨터는 웜 바이러스에 걸리게 된다.,첫째 줄에는 컴퓨터의 수가 주어진다. 컴퓨터의 수는 100 이하이고 각 컴퓨터에는 1번 부터 차례대로 번호가 매겨진다. 둘째 줄에는 네트워크 상에서 직접 연결되어 있는 컴퓨터 쌍의 수가 주어진다. 이어서 그 수만큼 한 줄에 한 쌍씩 네트워크 상에서 직접 연결되어 있는 컴퓨터의 번호 쌍이 주어진다.,"1번 컴퓨터가 웜 바이러스에 걸렸을 때, 1번 컴퓨터를 통해 웜 바이러스에 걸리게 되는 컴퓨터의 수를 첫째 줄에 출력한다.","[['7\n6\n1 2\n2 3\n1 5\n5 2\n5 6\n4 7', '4']]","#include <stdio.h>
+
+#define MAX_N 100 // 최대 컴퓨터 수
+#define MAX_M 10000 // 최대 연결 수
+
+int graph[MAX_N+1][MAX_N+1]; // 그래프
+int visited[MAX_N+1]; // 방문 여부
+int n, m; // 컴퓨터 수, 연결 수
+
+void dfs(int v) { // 깊이 우선 탐색
+    visited[v] = 1; // 현재 노드 방문 처리
+    for (int i = 1; i <= n; i++) { // 모든 노드에 대해
+        if (graph[v][i] && !visited[i]) { // 연결되어 있고, 방문하지 않은 노드이면
+            dfs(i); // 해당 노드에서 dfs 탐색 계속
+        }
+    }
+}
+
+int main() {
+    scanf(""%d %d"", &n, &m);
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        scanf(""%d %d"", &a, &b);
+        graph[a][b] = 1; // 양방향 연결 처리
+        graph[b][a] = 1;
+    }
+    dfs(1); // 1번 노드에서부터 dfs 탐색 시작
+    int count = 0;
+    for (int i = 1; i <= n; i++) { // 방문한 노드 수 세기
+        if (visited[i]) count++;
+    }
+    printf(""%d\n"", count-1); // 1번 노드는 제외하고 출력
+    return 0;
+}"
+16,31,그래프와 순회,7,단지번호붙이기,2667,"<그림 1>과 같이 정사각형 모양의 지도가 있다. 1은 집이 있는 곳을, 0은 집이 없는 곳을 나타낸다. 철수는 이 지도를 가지고 연결된 집의 모임인 단지를 정의하고, 단지에 번호를 붙이려 한다. 여기서 연결되었다는 것은 어떤 집이 좌우, 혹은 아래위로 다른 집이 있는 경우를 말한다. 대각선상에 집이 있는 경우는 연결된 것이 아니다. <그림 2>는 <그림 1>을 단지별로 번호를 붙인 것이다. 지도를 입력하여 단지수를 출력하고, 각 단지에 속하는 집의 수를 오름차순으로 정렬하여 출력하는 프로그램을 작성하시오.","첫 번째 줄에는 지도의 크기 N(정사각형이므로 가로와 세로의 크기는 같으며 5≤N≤25)이 입력되고, 그 다음 N줄에는 각각 N개의 자료(0혹은 1)가 입력된다.",첫 번째 줄에는 총 단지수를 출력하시오. 그리고 각 단지내 집의 수를 오름차순으로 정렬하여 한 줄에 하나씩 출력하시오.,"[['7\n0110100\n0110101\n1110101\n0000111\n0100000\n0111110\n0111000', '3\n7\n8\n9']]","#include <stdio.h>
+
+#define MAX_N 25
+
+int n;
+int map[MAX_N][MAX_N];
+int visited[MAX_N][MAX_N];
+int cnt; // 총 단지수
+int house_cnt[MAX_N*MAX_N]; // 각 단지내 집의 수
+int house_num; // 현재 단지내 집의 수
+
+void DFS(int r, int c) {
+    visited[r][c] = 1; // 방문체크
+    house_num++; // 현재 단지내 집 수 증가
+
+    // 인접한 집들을 확인하면서 DFS
+    if(r-1 >= 0 && map[r-1][c] == 1 && visited[r-1][c] == 0) DFS(r-1, c); // 위
+    if(r+1 < n && map[r+1][c] == 1 && visited[r+1][c] == 0) DFS(r+1, c); // 아래
+    if(c-1 >= 0 && map[r][c-1] == 1 && visited[r][c-1] == 0) DFS(r, c-1); // 왼쪽
+    if(c+1 < n && map[r][c+1] == 1 && visited[r][c+1] == 0) DFS(r, c+1); // 오른쪽
+}
+
+int main() {
+    // 입력 받기
+    scanf(""%d"", &n);
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) {
+            scanf(""%1d"", &map[i][j]); // %1d를 사용하여 개행문자 없이 하나씩 입력받음
+        }
+    }
+
+    // 모든 좌표에 대해 DFS 시작
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) {
+            if(map[i][j] == 1 && visited[i][j] == 0) { // 집이 있고, 아직 방문하지 않은 경우
+                house_num = 0; // 현재 단지내 집의 수 초기화
+                DFS(i, j); // DFS 탐색
+                house_cnt[cnt] = house_num; // 현재 단지내 집의 수를 저장
+                cnt++; // 총 단지수 증가
+            }
+        }
+    }
+
+    // 정렬하여 출력
+    printf(""%d\n"", cnt);
+    for(int i=0; i<cnt; i++) {
+        for(int j=i+1; j<cnt; j++) {
+            if(house_cnt[i] > house_cnt[j]) {
+                int temp = house_cnt[i];
+                house_cnt[i] = house_cnt[j];
+                house_cnt[j] = temp;
+            }
+        }
+        printf(""%d\n"", house_cnt[i]);
+    }
+
+    return 0;
+}"
+17,31,그래프와 순회,9,미로 탐색,2178,N×M크기의 배열로 표현되는 미로가 있다.,"첫째 줄에 두 정수 N, M(2 ≤ N, M ≤ 100)이 주어진다. 다음 N개의 줄에는 M개의 정수로 미로가 주어진다. 각각의 수들은 붙어서 입력으로 주어진다.",첫째 줄에 지나야 하는 최소의 칸 수를 출력한다. 항상 도착위치로 이동할 수 있는 경우만 입력으로 주어진다.,"[['4 6\n101111\n101010\n101011\n111011', '15'], ['4 6\n110110\n110110\n111111\n111101', '9'], ['2 25\n1011101110111011101110111\n1110111011101110111011101', '38'], ['7 7\n1011111\n1110001\n1000001\n1000001\n1000001\n1000001\n1111111', '13']]","#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, m;
+    scanf(""%d %d"", &n, &m);
+
+    // 미로를 저장할 2차원 배열 생성
+    int arr[n][m];
+
+    // 미로 입력 받기
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            scanf(""%1d"", &arr[i][j]); // 한 자리씩 입력 받음
+        }
+    }
+
+    // BFS 알고리즘을 위한 큐 생성
+    int queue[n * m][2];
+    int front = 0, rear = 0;
+
+    // 시작점 (0, 0)을 큐에 삽입
+    queue[rear][0] = 0; 
+    queue[rear][1] = 0;
+    rear++;
+
+    // 이동할 네 방향 (상, 하, 좌, 우)
+    int dx[] = {-1, 1, 0, 0};
+    int dy[] = {0, 0, -1, 1};
+
+    // BFS 알고리즘 실행
+    while (front != rear) { // 큐가 비어있지 않은 동안
+        int x = queue[front][0];
+        int y = queue[front][1];
+        front++;
+
+        for (int i = 0; i < 4; i++) { // 네 방향 탐색
+            int nx = x + dx[i];
+            int ny = y + dy[i];
+
+            if (nx >= 0 && nx < n && ny >= 0 && ny < m && arr[nx][ny] == 1) { // 범위를 벗어나지 않고, 이동 가능한 경우
+                arr[nx][ny] = arr[x][y] + 1; // 최단 거리 갱신
+                queue[rear][0] = nx;
+                queue[rear][1] = ny;
+                rear++;
+            }
+        }
+    }
+
+    // 도착점의 최단 거리 출력
+    printf(""%d"", arr[n-1][m-1]);
+
+    return 0;
+}"
+18,33,투 포인터,3,부분합,1806,"10,000 이하의 자연수로 이루어진 길이 N짜리 수열이 주어진다. 이 수열에서 연속된 수들의 부분합 중에 그 합이 S 이상이 되는 것 중, 가장 짧은 것의 길이를 구하는 프로그램을 작성하시오.","첫째 줄에 N (10 ≤ N < 100,000)과 S (0 < S ≤ 100,000,000)가 주어진다. 둘째 줄에는 수열이 주어진다. 수열의 각 원소는 공백으로 구분되어져 있으며, 10,000이하의 자연수이다.",첫째 줄에 구하고자 하는 최소의 길이를 출력한다. 만일 그러한 합을 만드는 것이 불가능하다면 0을 출력하면 된다.,"[['10 15\n5 1 3 5 10 7 4 9 2 8', '2']]","#include <stdio.h>
+
+int n, s;
+int arr[100000];
+
+int main() {
+    scanf(""%d %d"", &n, &s);
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &arr[i]);
+    }
+
+    int start = 0, end = 0;
+    int sum = arr[0];
+    int ans = 100001;
+
+    while (start <= end && end < n) {
+        if (sum < s) {
+            end++;
+            sum += arr[end];
+        } else if (sum >= s) {
+            if (end - start + 1 < ans) {
+                ans = end - start + 1;
+            }
+            sum -= arr[start];
+            start++;
+        }
+    }
+
+    if (ans == 100001) {
+        printf(""0\n"");
+    } else {
+        printf(""%d\n"", ans);
+    }
+
+    return 0;
+}"
+19,35,트리,1,트리의 부모 찾기,11725,"루트 없는 트리가 주어진다. 이때, 트리의 루트를 1이라고 정했을 때, 각 노드의 부모를 구하는 프로그램을 작성하시오.","첫째 줄에 노드의 개수 N (2 ≤ N ≤ 100,000)이 주어진다. 둘째 줄부터 N-1개의 줄에 트리 상에서 연결된 두 정점이 주어진다.",첫째 줄부터 N-1개의 줄에 각 노드의 부모 노드 번호를 2번 노드부터 순서대로 출력한다.,"[['7\n1 6\n6 3\n3 5\n4 1\n2 4\n4 7', '4\n6\n1\n3\n1\n4'], ['12\n1 2\n1 3\n2 4\n3 5\n3 6\n4 7\n4 8\n5 9\n5 10\n6 11\n6 12', '1\n1\n2\n3\n3\n4\n4\n5\n5\n6\n6']]","#include <stdio.h>
+#include <vector>
+
+using namespace std;
+
+vector<int> tree[100001];
+int parent[100001];
+
+void dfs(int cur, int prev) {
+    parent[cur] = prev; // 현재 노드의 부모 노드 저장
+    for(int i=0; i<tree[cur].size(); i++) { // 현재 노드와 연결된 자식 노드들에 대해
+        int next = tree[cur][i];
+        if(next != prev) { // 부모 노드가 아니면(이미 저장한 노드가 아니면) 탐색
+            dfs(next, cur);
+        }
+    }
+}
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    for(int i=0; i<n-1; i++) { // 연결 정보 입력받아 저장
+        int a, b;
+        scanf(""%d %d"", &a, &b);
+        tree[a].push_back(b);
+        tree[b].push_back(a);
+    }
+
+    dfs(1, 0); // 루트 노드인 1부터 dfs 탐색
+
+    for(int i=2; i<=n; i++) { // 부모 노드 출력
+        printf(""%d\n"", parent[i]);
+    }
+
+    return 0;
+}"
+20,18,심화 2,1,약수,1037,"양수 A가 N의 진짜 약수가 되려면, N이 A의 배수이고, A가 1과 N이 아니어야 한다. 어떤 수 N의 진짜 약수가 모두 주어질 때, N을 구하는 프로그램을 작성하시오.","첫째 줄에 N의 진짜 약수의 개수가 주어진다. 이 개수는 50보다 작거나 같은 자연수이다. 둘째 줄에는 N의 진짜 약수가 주어진다. 1,000,000보다 작거나 같고, 2보다 크거나 같은 자연수이고, 중복되지 않는다.",첫째 줄에 N을 출력한다. N은 항상 32비트 부호있는 정수로 표현할 수 있다.,"[['2\n4 2', '8'], ['1\n2', '4'], ['6\n3 4 2 12 6 8', '24'], ['14\n14 26456 2 28 13228 3307 7 23149 8 6614 46298 56 4 92596', '185192']]","#include<stdio.h>
+
+int main(){
+    int n;
+    scanf(""%d"", &n);
+    int factor[n];
+    for(int i=0;i<n;i++){
+        scanf(""%d"", &factor[i]);
+    }
+    int max=factor[0], min=factor[0];
+    for(int i=1;i<n;i++){
+        if(factor[i]>max) max=factor[i];
+        if(factor[i]<min) min=factor[i];
+    }
+    printf(""%d"", max*min);
+    return 0;
+}"
+21,22,백트래킹,1,N과 M (1),15649,"자연수 N과 M이 주어졌을 때, 아래 조건을 만족하는 길이가 M인 수열을 모두 구하는 프로그램을 작성하시오.",첫째 줄에 자연수 N과 M이 주어진다. (1 ≤ M ≤ N ≤ 8),"한 줄에 하나씩 문제의 조건을 만족하는 수열을 출력한다. 중복되는 수열을 여러 번 출력하면 안되며, 각 수열은 공백으로 구분해서 출력해야 한다.","[['3 1', '1\n2\n3'], ['4 2', '1 2\n1 3\n1 4\n2 1\n2 3\n2 4\n3 1\n3 2\n3 4\n4 1\n4 2\n4 3'], ['4 4', '1 2 3 4\n1 2 4 3\n1 3 2 4\n1 3 4 2\n1 4 2 3\n1 4 3 2\n2 1 3 4\n2 1 4 3\n2 3 1 4\n2 3 4 1\n2 4 1 3\n2 4 3 1\n3 1 2 4\n3 1 4 2\n3 2 1 4\n3 2 4 1\n3 4 1 2\n3 4 2 1\n4 1 2 3\n4 1 3 2\n4 2 1 3\n4 2 3 1\n4 3 1 2\n4 3 2 1']]","#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+int visited[10];
+int arr[10];
+
+void dfs(int cnt, int n, int m) {
+    if (cnt == m) {
+        for (int i = 0; i < m; i++) {
+            printf(""%d "", arr[i]);
+        }
+        printf(""\n"");
+        return;
+    }
+    for (int i = 1; i <= n; i++) {
+        if (!visited[i]) {
+            visited[i] = 1;
+            arr[cnt] = i;
+            dfs(cnt + 1, n, m);
+            visited[i] = 0;
+        }
+    }
+}
+
+int main() {
+    int n, m;
+    scanf(""%d %d"", &n, &m);
+    dfs(0, n, m);
+    return 0;
+}"
+22,22,백트래킹,5,N-Queen,9663,N-Queen 문제는 크기가 N × N인 체스판 위에 퀸 N개를 서로 공격할 수 없게 놓는 문제이다.,첫째 줄에 N이 주어진다. (1 ≤ N < 15),첫째 줄에 퀸 N개를 서로 공격할 수 없게 놓는 경우의 수를 출력한다.,"[['8', '92']]","#include <stdio.h>
+#include <stdbool.h>
+
+int n; // 체스판 크기
+int count; // 퀸을 놓는 경우의 수
+int col[15]; // 각 행에 놓인 퀸의 열 번호 저장
+
+// 퀸을 놓을 수 있는지 검사하는 함수
+bool check(int row, int col_num) {
+    for (int i = 0; i < row; i++) {
+        if (col[i] == col_num // 같은 열에 놓여 있는 경우
+            || row - i == col_num - col[i] // 대각선 상에 놓여 있는 경우
+            || row - i == col[i] - col_num) // 대각선 상에 놓여 있는 경우
+            return false; // 놓을 수 없음
+    }
+    return true; // 놓을 수 있음
+}
+
+// 퀸을 놓는 함수
+void queen(int row) {
+    if (row == n) {
+        count++; // 경우의 수 증가
+        return;
+    }
+    for (int i = 0; i < n; i++) {
+        if (check(row, i)) { // 퀸을 놓을 수 있는 경우
+            col[row] = i; // 해당 행에 퀸을 놓음
+            queen(row + 1); // 다음 행에 퀸을 놓음
+        }
+    }
+}
+
+int main() {
+    scanf(""%d"", &n);
+    queen(0); // 0번째 행부터 시작
+    printf(""%d"", count);
+    return 0;
+}"
+23,22,백트래킹,7,연산자 끼워넣기,14888,"N개의 수로 이루어진 수열 A1, A2, ..., AN이 주어진다. 또, 수와 수 사이에 끼워넣을 수 있는 N-1개의 연산자가 주어진다. 연산자는 덧셈(+), 뺄셈(-), 곱셈(×), 나눗셈(÷)으로만 이루어져 있다.","첫째 줄에 수의 개수 N(2 ≤ N ≤ 11)가 주어진다. 둘째 줄에는 A1, A2, ..., AN이 주어진다. (1 ≤ Ai ≤ 100) 셋째 줄에는 합이 N-1인 4개의 정수가 주어지는데, 차례대로 덧셈(+)의 개수, 뺄셈(-)의 개수, 곱셈(×)의 개수, 나눗셈(÷)의 개수이다. ","첫째 줄에 만들 수 있는 식의 결과의 최댓값을, 둘째 줄에는 최솟값을 출력한다. 연산자를 어떻게 끼워넣어도 항상 -10억보다 크거나 같고, 10억보다 작거나 같은 결과가 나오는 입력만 주어진다. 또한, 앞에서부터 계산했을 때, 중간에 계산되는 식의 결과도 항상 -10억보다 크거나 같고, 10억보다 작거나 같다.","[['2\n5 6\n0 0 1 0', '30\n30'], ['3\n3 4 5\n1 0 1 0', '35\n17'], ['6\n1 2 3 4 5 6\n2 1 1 1', '54\n-24']]","#include <stdio.h>
+#include <limits.h> // INT_MAX, INT_MIN 사용을 위한 헤더파일
+#define MAX_N 11 // 문제에서 N의 최댓값이 11임을 알 수 있음
+#define MAX_OP 4 // 연산자의 개수(덧셈, 뺄셈, 곱셈, 나눗셈)가 4임을 알 수 있음
+
+int N, op[MAX_OP]; // N: 수의 개수, op: 연산자의 개수
+int A[MAX_N]; // 주어진 수
+int max_res = INT_MIN, min_res = INT_MAX; // 최댓값과 최솟값을 저장하기 위한 변수
+
+void dfs(int idx, int res) { // idx: 현재까지 끼워넣은 연산자의 개수, res: 현재까지 계산한 결과
+    if (idx == N - 1) { // 모든 연산자를 다 끼워넣은 경우
+        if (res > max_res) max_res = res; // 최댓값 업데이트
+        if (res < min_res) min_res = res; // 최솟값 업데이트
+        return; // 현재까지 계산한 결과 반환
+    }
+    for (int i = 0; i < MAX_OP; i++) { // 연산자 종류에 대해 모두 시도해보기
+        if (op[i] > 0) { // 해당 연산자를 아직 다 사용하지 않은 경우
+            op[i]--; // 해당 연산자 사용 표시(-1)
+            if (i == 0) dfs(idx + 1, res + A[idx + 1]); // 덧셈
+            else if (i == 1) dfs(idx + 1, res - A[idx + 1]); // 뺄셈
+            else if (i == 2) dfs(idx + 1, res * A[idx + 1]); // 곱셈
+            else if (i == 3) dfs(idx + 1, res / A[idx + 1]); // 나눗셈
+            op[i]++; // 해당 연산자 사용 표시(+1)
+        }
+    }
+}
+
+int main() {
+    scanf(""%d"", &N);
+    for (int i = 0; i < N; i++) {
+        scanf(""%d"", &A[i]);
+    }
+    for (int i = 0; i < MAX_OP; i++) {
+        scanf(""%d"", &op[i]);
+    }
+    dfs(0, A[0]); // 처음에는 첫 번째 수를 결과에 넣어주기
+    printf(""%d\n%d\n"", max_res, min_res); // 최댓값과 최솟값 출력
+    return 0;
+}"
+24,26,분할 정복,1,색종이 만들기,2630,"아래 <그림 1>과 같이 여러개의 정사각형칸들로 이루어진 정사각형 모양의 종이가 주어져 있고, 각 정사각형들은 하얀색으로 칠해져 있거나 파란색으로 칠해져 있다. 주어진 종이를 일정한 규칙에 따라 잘라서 다양한 크기를 가진 정사각형 모양의 하얀색 또는 파란색 색종이를 만들려고 한다.","첫째 줄에는 전체 종이의 한 변의 길이 N이 주어져 있다. N은 2, 4, 8, 16, 32, 64, 128 중 하나이다. 색종이의 각 가로줄의 정사각형칸들의 색이 윗줄부터 차례로 둘째 줄부터 마지막 줄까지 주어진다. 하얀색으로 칠해진 칸은 0, 파란색으로 칠해진 칸은 1로 주어지며, 각 숫자 사이에는 빈칸이 하나씩 있다.","첫째 줄에는 잘라진 햐얀색 색종이의 개수를 출력하고, 둘째 줄에는 파란색 색종이의 개수를 출력한다.","[['8\n1 1 0 0 0 0 1 1\n1 1 0 0 0 0 1 1\n0 0 0 0 1 1 0 0\n0 0 0 0 1 1 0 0\n1 0 0 0 1 1 1 1\n0 1 0 0 1 1 1 1\n0 0 1 1 1 1 1 1\n0 0 1 1 1 1 1 1', '9\n7']]","#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+
+int paper[129][129] = { 0 };
+int white_cnt = 0;
+int blue_cnt = 0;
+
+void count_paper(int x, int y, int size) {
+    int start = paper[x][y];
+    if (size == 1) {
+        if (start == 0) white_cnt++;
+        else blue_cnt++;
+        return;
+    }
+    for (int i = x; i < x + size; i++) {
+        for (int j = y; j < y + size; j++) {
+            if (paper[i][j] != start) {
+                size /= 2;
+                count_paper(x, y, size);
+                count_paper(x, y + size, size);
+                count_paper(x + size, y, size);
+                count_paper(x + size, y + size, size);
+                return;
+            }
+        }
+    }
+    if (start == 0) white_cnt++;
+    else blue_cnt++;
+}
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf(""%d"", &paper[i][j]);
+        }
+    }
+
+    count_paper(0, 0, n);
+
+    printf(""%d\n%d"", white_cnt, blue_cnt);
+
+    return 0;
+}"
+25,26,분할 정복,5,이항 계수 3,11401,"자연수
+N
+\(N\)과 정수
+K
+\(K\)가 주어졌을 때 이항 계수
+(
+N
+K
+)
+\(\binom{N}{K}\)를 1,000,000,007로 나눈 나머지를 구하는 프로그램을 작성하시오.","첫째 줄에
+N
+\(N\)과
+K
+\(K\)가 주어진다. (1 ≤
+N
+\(N\) ≤ 4,000,000, 0 ≤
+K
+\(K\) ≤
+N
+\(N\))"," (
+N
+K
+)
+\(\binom{N}{K}\)를 1,000,000,007로 나눈 나머지를 출력한다.","[['5 2', '10']]","#include <stdio.h>
+#define MOD 1000000007
+
+int main(){
+    int n, k;
+    int fact[4000001], inv_fact[4000001];
+    scanf(""%d %d"", &n, &k);
+    fact[0] = fact[1] = 1;
+    for(int i=2; i<=n; i++){
+        fact[i] = (long long) fact[i-1] * i % MOD;
+    }
+    inv_fact[0] = inv_fact[1] = 1;
+    for(int i=2; i<=n; i++){
+        inv_fact[i] = (long long) inv_fact[MOD%i] * (MOD - MOD/i) % MOD;
+    }
+    for(int i=2; i<=n; i++){
+        inv_fact[i] = (long long) inv_fact[i-1] * inv_fact[i] % MOD;
+    }
+    printf(""%lld\n"", (long long) fact[n] * inv_fact[k] % MOD * inv_fact[n-k] % MOD);
+    return 0;
+}"
+26,26,분할 정복,7,행렬 제곱,10830,"크기가 N*N인 행렬 A가 주어진다. 이때, A의 B제곱을 구하는 프로그램을 작성하시오. 수가 매우 커질 수 있으니, A^B의 각 원소를 1,000으로 나눈 나머지를 출력한다.","첫째 줄에 행렬의 크기 N과 B가 주어진다. (2 ≤ N ≤  5, 1 ≤ B ≤ 100,000,000,000)",첫째 줄부터 N개의 줄에 걸쳐 행렬 A를 B제곱한 결과를 출력한다.,"[['2 5\n1 2\n3 4', '69 558\n337 406'], ['3 3\n1 2 3\n4 5 6\n7 8 9', '468 576 684\n62 305 548\n656 34 412'], ['5 10\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1\n1 0 0 0 1', '512 0 0 0 512\n512 0 0 0 512\n512 0 0 0 512\n512 0 0 0 512\n512 0 0 0 512']]","#include <stdio.h>
+
+#define MAX_N 5
+
+typedef struct {
+    long long mat[MAX_N][MAX_N];
+} matrix;
+
+int n;
+long long b;
+matrix A;
+
+matrix mat_mult(matrix X, matrix Y) {
+    matrix result;
+    int i, j, k;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            result.mat[i][j] = 0;
+            for (k = 0; k < n; k++) {
+                result.mat[i][j] += X.mat[i][k] * Y.mat[k][j];
+                result.mat[i][j] %= 1000;
+            }
+        }
+    }
+    return result;
+}
+
+matrix mat_pow(matrix X, long long power) {
+    if (power == 1) {
+        return X;
+    }
+    matrix half = mat_pow(X, power/2);
+    if (power % 2 == 0) {
+        return mat_mult(half, half);
+    } else {
+        return mat_mult(mat_mult(half, half), X);
+    }
+}
+
+int main() {
+    scanf(""%d %lld"", &n, &b);
+    int i, j;
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            scanf(""%lld"", &A.mat[i][j]);
+            A.mat[i][j] %= 1000;
+        }
+    }
+    matrix result = mat_pow(A, b);
+    for (i = 0; i < n; i++) {
+        for (j = 0; j < n; j++) {
+            printf(""%lld "", result.mat[i][j]);
+        }
+        printf(""\n"");
+    }
+    return 0;
+}"
+27,30,스택 2,1,문자열 폭발,9935,"상근이는 문자열에 폭발 문자열을 심어 놓았다. 폭발 문자열이 폭발하면 그 문자는 문자열에서 사라지며, 남은 문자열은 합쳐지게 된다.","첫째 줄에 문자열이 주어진다. 문자열의 길이는 1보다 크거나 같고, 1,000,000보다 작거나 같다.",첫째 줄에 모든 폭발이 끝난 후 남은 문자열을 출력한다.,"[['mirkovC4nizCC44\nC4', 'mirkovniz'], ['12ab112ab2ab\n12ab', 'FRULA']]","#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    char str[1000001], bomb[37];
+    int len, bomb_len, i, top = 0;
+    scanf(""%s%s"", str, bomb);
+    len = strlen(str);
+    bomb_len = strlen(bomb);
+    char stack[len];
+    for (i = 0; i < len; i++) {
+        stack[top++] = str[i];
+        if (top >= bomb_len && stack[top-1] == bomb[bomb_len-1]) {
+            int flag = 1;
+            for (int j = 0; j < bomb_len; j++) {
+                if (bomb[bomb_len-j-1] != stack[top-j-1]) {
+                    flag = 0;
+                    break;
+                }
+            }
+            if (flag == 1) top -= bomb_len;
+        }
+    }
+    if (top == 0) printf(""FRULA"");
+    else {
+        for (i = 0; i < top; i++) printf(""%c"", stack[i]);
+    }
+    return 0;
+}"
+28,30,스택 2,3,오등큰수,17299,"크기가 N인 수열 A = A1, A2, ..., AN이 있다. 수열의 각 원소 Ai에 대해서 오등큰수 NGF(i)를 구하려고 한다.","첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000,000)이 주어진다. 둘째에 수열 A의 원소 A1, A2, ..., AN (1 ≤ Ai ≤ 1,000,000)이 주어진다.","총 N개의 수 NGF(1), NGF(2), ..., NGF(N)을 공백으로 구분해 출력한다.","[['7\n1 1 2 3 4 2 1', '-1 -1 1 2 2 1 -1']]","#include <stdio.h>
+#include <stdlib.h>
+
+int main(void) {
+    int N;
+    scanf(""%d"", &N);
+
+    int *A = (int*) malloc(sizeof(int) * N);
+    for (int i = 0; i < N; i++) {
+        scanf(""%d"", &A[i]);
+    }
+
+    int *count = (int*) calloc(1000001, sizeof(int));
+    int *stack = (int*) malloc(sizeof(int) * N);
+    int top = -1;
+    int *NGF = (int*) malloc(sizeof(int) * N);
+
+    for (int i = 0; i < N; i++) {
+        count[A[i]]++;
+    }
+
+    for (int i = 0; i < N; i++) {
+        while (top >= 0 && count[A[stack[top]]] < count[A[i]]) {
+            NGF[stack[top--]] = A[i];
+        }
+        stack[++top] = i;
+    }
+    while (top >= 0) {
+        NGF[stack[top--]] = -1;
+    }
+
+    for (int i = 0; i < N; i++) {
+        printf(""%d "", NGF[i]);
+    }
+    
+    free(A);
+    free(count);
+    free(stack);
+    free(NGF);
+
+    return 0;
+}"
+29,43,최소 공통 조상,3,LCA 2,11438,"N(2 ≤ N ≤ 100,000)개의 정점으로 이루어진 트리가 주어진다. 트리의 각 정점은 1번부터 N번까지 번호가 매겨져 있으며, 루트는 1번이다.","첫째 줄에 노드의 개수 N이 주어지고, 다음 N-1개 줄에는 트리 상에서 연결된 두 정점이 주어진다. 그 다음 줄에는 가장 가까운 공통 조상을 알고싶은 쌍의 개수 M이 주어지고, 다음 M개 줄에는 정점 쌍이 주어진다.",M개의 줄에 차례대로 입력받은 두 정점의 가장 가까운 공통 조상을 출력한다.,"[['15\n1 2\n1 3\n2 4\n3 7\n6 2\n3 8\n4 9\n2 5\n5 11\n7 13\n10 4\n11 15\n12 5\n14 7\n6\n6 11\n10 9\n2 6\n7 6\n8 13\n8 15', '2\n4\n2\n1\n3\n1']]","#include <stdio.h>
+#include <vector>
+using namespace std;
+
+const int MAX = 100000;
+vector<int> tree[MAX + 1];
+bool visited[MAX + 1];
+int depth[MAX + 1];
+int parent[MAX + 1][20]; // parent[i][j]: i의 2^j번째 부모 노드
+int log2[MAX + 1]; // log2[i]: i의 2진수 자릿수
+int n, m;
+
+void dfs(int node, int d) { // DFS로 각 노드의 깊이와 부모 노드를 구함
+    visited[node] = true;
+    depth[node] = d;
+    for (int i = 0; i < tree[node].size(); i++) {
+        int next = tree[node][i];
+        if (!visited[next]) {
+            parent[next][0] = node;
+            dfs(next, d + 1);
+        }
+    }
+}
+
+void init() { // parent 배열과 log2 배열 초기화
+    dfs(1, 0); // 루트 노드는 1, 깊이는 0
+    for (int j = 1; (1 << j) <= n; j++) { // parent 배열 채우기
+        for (int i = 1; i <= n; i++) {
+            parent[i][j] = parent[parent[i][j-1]][j-1];
+        }
+    }
+    for (int i = 2; i <= n; i++) { // log2 배열 채우기
+        log2[i] = log2[i/2] + 1;
+    }
+}
+
+int lca(int x, int y) {
+    if (depth[x] > depth[y]) { // x가 더 깊게 만듦
+        swap(x, y);
+    }
+    // 두 노드의 깊이가 같은 경우에 맞춰 부모 노드 위치 조정
+    for (int i = log2[n]; i >= 0; i--) {
+        if (depth[y] - depth[x] >= (1 << i)) {
+            y = parent[y][i];
+        }
+    }
+    // 두 노드의 부모 노드로 동시에 이동하며 LCA 탐색
+    if (x == y) {
+        return x;
+    }
+    for (int i = log2[n]; i >= 0; i--) {
+        if (parent[x][i] != parent[y][i]) {
+            x = parent[x][i];
+            y = parent[y][i];
+        }
+    }
+    return parent[x][0];
+}
+
+int main() {
+    scanf(""%d"", &n);
+    for (int i = 0; i < n-1; i++) {
+        int u, v;
+        scanf(""%d %d"", &u, &v);
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    init(); // parent 배열과 log2 배열 초기화
+    scanf(""%d"", &m);
+    for (int i = 0; i < m; i++) {
+        int x, y;
+        scanf(""%d %d"", &x, &y);
+        printf(""%d\n"", lca(x, y)); // LCA 출력
+    }
+    return 0;
+}"
+30,43,최소 공통 조상,3,LCA 2,11438,"N(2 ≤ N ≤ 100,000)개의 정점으로 이루어진 트리가 주어진다. 트리의 각 정점은 1번부터 N번까지 번호가 매겨져 있으며, 루트는 1번이다.","첫째 줄에 노드의 개수 N이 주어지고, 다음 N-1개 줄에는 트리 상에서 연결된 두 정점이 주어진다. 그 다음 줄에는 가장 가까운 공통 조상을 알고싶은 쌍의 개수 M이 주어지고, 다음 M개 줄에는 정점 쌍이 주어진다.",M개의 줄에 차례대로 입력받은 두 정점의 가장 가까운 공통 조상을 출력한다.,"[['15\n1 2\n1 3\n2 4\n3 7\n6 2\n3 8\n4 9\n2 5\n5 11\n7 13\n10 4\n11 15\n12 5\n14 7\n6\n6 11\n10 9\n2 6\n7 6\n8 13\n8 15', '2\n4\n2\n1\n3\n1']]","#include <stdio.h>
+#include <vector>
+using namespace std;
+
+const int MAX = 100000;
+vector<int> tree[MAX + 1];
+bool visited[MAX + 1];
+int depth[MAX + 1];
+int parent[MAX + 1][20]; // parent[i][j]: i의 2^j번째 부모 노드
+int log2[MAX + 1]; // log2[i]: i의 2진수 자릿수
+int n, m;
+
+void dfs(int node, int d) { // DFS로 각 노드의 깊이와 부모 노드를 구함
+    visited[node] = true;
+    depth[node] = d;
+    for (int i = 0; i < tree[node].size(); i++) {
+        int next = tree[node][i];
+        if (!visited[next]) {
+            parent[next][0] = node;
+            dfs(next, d + 1);
+        }
+    }
+}
+
+void init() { // parent 배열과 log2 배열 초기화
+    dfs(1, 0); // 루트 노드는 1, 깊이는 0
+    for (int j = 1; (1 << j) <= n; j++) { // parent 배열 채우기
+        for (int i = 1; i <= n; i++) {
+            parent[i][j] = parent[parent[i][j-1]][j-1];
+        }
+    }
+    for (int i = 2; i <= n; i++) { // log2 배열 채우기
+        log2[i] = log2[i/2] + 1;
+    }
+}
+
+int lca(int x, int y) {
+    if (depth[x] > depth[y]) { // x가 더 깊게 만듦
+        swap(x, y);
+    }
+    // 두 노드의 깊이가 같은 경우에 맞춰 부모 노드 위치 조정
+    for (int i = log2[n]; i >= 0; i--) {
+        if (depth[y] - depth[x] >= (1 << i)) {
+            y = parent[y][i];
+        }
+    }
+    // 두 노드의 부모 노드로 동시에 이동하며 LCA 탐색
+    if (x == y) {
+        return x;
+    }
+    for (int i = log2[n]; i >= 0; i--) {
+        if (parent[x][i] != parent[y][i]) {
+            x = parent[x][i];
+            y = parent[y][i];
+        }
+    }
+    return parent[x][0];
+}
+
+int main() {
+    scanf(""%d"", &n);
+    for (int i = 0; i < n-1; i++) {
+        int u, v;
+        scanf(""%d %d"", &u, &v);
+        tree[u].push_back(v);
+        tree[v].push_back(u);
+    }
+    init(); // parent 배열과 log2 배열 초기화
+    scanf(""%d"", &m);
+    for (int i = 0; i < m; i++) {
+        int x, y;
+        scanf(""%d %d"", &x, &y);
+        printf(""%d\n"", lca(x, y)); // LCA 출력
+    }
+    return 0;
+}"
+31,43,최소 공통 조상,3,LCA 2,11438,"N(2 ≤ N ≤ 100,000)개의 정점으로 이루어진 트리가 주어진다. 트리의 각 정점은 1번부터 N번까지 번호가 매겨져 있으며, 루트는 1번이다.","첫째 줄에 노드의 개수 N이 주어지고, 다음 N-1개 줄에는 트리 상에서 연결된 두 정점이 주어진다. 그 다음 줄에는 가장 가까운 공통 조상을 알고싶은 쌍의 개수 M이 주어지고, 다음 M개 줄에는 정점 쌍이 주어진다.",M개의 줄에 차례대로 입력받은 두 정점의 가장 가까운 공통 조상을 출력한다.,"[['15\n1 2\n1 3\n2 4\n3 7\n6 2\n3 8\n4 9\n2 5\n5 11\n7 13\n10 4\n11 15\n12 5\n14 7\n6\n6 11\n10 9\n2 6\n7 6\n8 13\n8 15', '2\n4\n2\n1\n3\n1']]","#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+vector<int> tree[100001];
+int parent[100001][17];
+int depth[100001];
+
+void dfs(int node, int dep, int par) { // dfs로 각 노드의 깊이와 부모 노드 찾기
+    depth[node] = dep;
+    parent[node][0] = par;
+    for (int i = 0; i < tree[node].size(); i++) {
+        int next = tree[node][i];
+        if (next != par) {
+            dfs(next, dep + 1, node);
+        }
+    }
+}
+
+void set_parent(int n) { // 부모 노드 설정
+    dfs(1, 0, -1);
+    for (int j = 0; j < 16; j++) {
+        for (int i = 1; i <= n; i++) {
+            if (parent[i][j] != -1) {
+                parent[i][j + 1] = parent[parent[i][j]][j];
+            }
+        }
+    }
+}
+
+int get_lca(int u, int v) { // 가장 가까운 공통 조상 찾기
+    if (depth[u] > depth[v]) swap(u, v);
+    for (int i = 16; i >= 0; i--) {
+        if (depth[v] - depth[u] >= (1 << i)) {
+            v = parent[v][i];
+        }
+    }
+    if (u == v) return u;
+    for (int i = 16; i >= 0; i--) {
+        if (parent[u][i] != parent[v][i]) {
+            u = parent[u][i];
+            v = parent[v][i];
+        }
+    }
+    return parent[u][0];
+}
+
+int main() {
+    int n, m;
+    scanf(""%d"", &n);
+    for (int i = 0; i < n - 1; i++) {
+        int a, b;
+        scanf(""%d %d"", &a, &b);
+        tree[a].push_back(b);
+        tree[b].push_back(a);
+    }
+    set_parent(n);
+    scanf(""%d"", &m);
+    for (int i = 0; i < m; i++) {
+        int a, b;
+        scanf(""%d %d"", &a, &b);
+        printf(""%d\n"", get_lca(a, b));
+    }
+    return 0;
+}"
+32,40,동적 계획법 3,1,집합,11723,"비어있는 공집합 S가 주어졌을 때, 아래 연산을 수행하는 프로그램을 작성하시오.","첫째 줄에 수행해야 하는 연산의 수 M (1 ≤ M ≤ 3,000,000)이 주어진다.","check 연산이 주어질때마다, 결과를 출력한다.","[['26\nadd 1\nadd 2\ncheck 1\ncheck 2\ncheck 3\nremove 2\ncheck 1\ncheck 2\ntoggle 3\ncheck 1\ncheck 2\ncheck 3\ncheck 4\nall\ncheck 10\ncheck 20\ntoggle 10\nremove 20\ncheck 10\ncheck 20\nempty\ncheck 1\ntoggle 1\ncheck 1\ntoggle 1\ncheck 1', '1\n1\n0\n1\n0\n1\n0\n1\n0\n1\n1\n0\n0\n0\n1\n0']]","#include <stdio.h>
+#include <string.h> // strcmp 함수 사용을 위한 헤더파일
+using namespace std;
+
+int bitset = 0; // 비트마스킹을 이용해 S 집합을 저장할 변수
+
+int main() {
+    int M;
+    scanf(""%d"", &M);
+    for (int i = 0; i < M; i++) {
+        char op[7];
+        int x;
+        scanf(""%s"", op);
+        if (!strcmp(op, ""add"")) {
+            scanf(""%d"", &x);
+            bitset |= (1 << x); // 해당 원소를 S에 추가
+        }
+        else if (!strcmp(op, ""remove"")) {
+            scanf(""%d"", &x);
+            bitset &= ~(1 << x); // 해당 원소를 S에서 제거
+        }
+        else if (!strcmp(op, ""check"")) {
+            scanf(""%d"", &x);
+            if ((bitset & (1 << x)) == 0) printf(""0\n""); // 해당 원소가 S에 없는 경우
+            else printf(""1\n""); // 해당 원소가 S에 있는 경우
+        }
+        else if (!strcmp(op, ""toggle"")) {
+            scanf(""%d"", &x);
+            bitset ^= (1 << x); // 해당 원소의 포함 여부를 반전
+        }
+        else if (!strcmp(op, ""all"")) {
+            bitset = (1 << 21) - 1; // 모든 원소를 S에 추가
+        }
+        else if (!strcmp(op, ""empty"")) {
+            bitset = 0; // S를 공집합으로 만듦
+        }
+    }
+    return 0;
+}"
+33,40,동적 계획법 3,3,외판원 순회,2098,"외판원 순회 문제는 영어로 Traveling Salesman problem (TSP) 라고 불리는 문제로 computer science 분야에서 가장 중요하게 취급되는 문제 중 하나이다. 여러 가지 변종 문제가 있으나, 여기서는 가장 일반적인 형태의 문제를 살펴보자.","첫째 줄에 도시의 수 N이 주어진다. (2 ≤ N ≤ 16) 다음 N개의 줄에는 비용 행렬이 주어진다. 각 행렬의 성분은 1,000,000 이하의 양의 정수이며, 갈 수 없는 경우는 0이 주어진다. W[i][j]는 도시 i에서 j로 가기 위한 비용을 나타낸다.",첫째 줄에 외판원의 순회에 필요한 최소 비용을 출력한다.,"[['4\n0 10 15 20\n5 0 9 10\n6 13 0 12\n8 8 9 0', '35']]","#include <stdio.h>
+#include <algorithm>
+#define INF 1000000000
+
+using namespace std;
+
+int n;
+int w[17][17];
+int dp[17][1<<16];
+
+int tsp(int cur, int visited) {
+    if (visited == (1 << n) - 1) { // 모든 도시 방문 완료한 경우
+        if (w[cur][0] != 0) {
+            return w[cur][0]; // 마지막 도시에서 시작 도시로 돌아갈 수 있는 경우 해당 비용 리턴
+        } else {
+            return INF; // 마지막 도시에서 시작 도시로 돌아갈 수 없는 경우 INF 리턴
+        }
+    }
+
+    int& ret = dp[cur][visited];
+    if (ret != -1) return ret; // 이미 계산한 경우
+
+    ret = INF;
+
+    for (int i = 0; i < n; i++) {
+        if (visited & (1 << i)) continue; // 이미 방문한 도시인 경우
+        if (w[cur][i] == 0) continue; // 해당 도시로 가는 길이 없는 경우
+        ret = min(ret, tsp(i, visited | (1 << i)) + w[cur][i]); // 다음 도시 방문하면서 최소 비용 갱신
+    }
+
+    return ret;
+}
+
+int main() {
+    scanf(""%d"", &n);
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf(""%d"", &w[i][j]);
+        }
+    }
+
+    fill(&dp[0][0], &dp[16][1<<16], -1);
+    printf(""%d\n"", tsp(0, 1));
+
+    return 0;
+}"
+34,37,최소 신장 트리,1,상근이의 여행,9372,상근이는 겨울방학을 맞아 N개국을 여행하면서 자아를 찾기로 마음먹었다. ,"첫 번째 줄에는 테스트 케이스의 수 T(T ≤ 100)가 주어지고,",테스트 케이스마다 한 줄을 출력한다.,"[['2\n3 3\n1 2\n2 3\n1 3\n5 4\n2 1\n2 3\n4 3\n4 5', '2\n4']]","#include <stdio.h>
+
+int main() {
+    int T;
+    scanf(""%d"", &T);
+
+    for (int i = 0; i < T; i++) {
+        int N, M;
+        scanf(""%d %d"", &N, &M);
+
+        for (int j = 0; j < M; j++) {
+            int a, b;
+            scanf(""%d %d"", &a, &b);
+        }
+
+        printf(""%d\n"", N - 1);
+    }
+
+    return 0;
+}"
+35,37,최소 신장 트리,5,전력난,6497,"성진이는 한 도시의 시장인데 거지라서 전력난에 끙끙댄다. 그래서 모든 길마다 원래 켜져 있던 가로등 중 일부를 소등하기로 하였다. 길의 가로등을 켜 두면 하루에 길의 미터 수만큼 돈이 들어가는데, 일부를 소등하여 그만큼의 돈을 절약할 수 있다.",입력은 여러 개의 테스트 케이스로 구분되어 있다.,각 테스트 케이스마다 한 줄에 걸쳐 절약할 수 있는 최대 비용을 출력한다.,"[['7 11\n0 1 7\n0 3 5\n1 2 8\n1 3 9\n1 4 7\n2 4 5\n3 4 15\n3 5 6\n4 5 8\n4 6 9\n5 6 11\n0 0', '51']]","#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int n, m;
+vector<pair<int, pair<int, int>>> edges; // 가중치, (시작 정점, 끝 정점)
+int parent[200001]; // 유니온 파인드를 위한 부모 노드 배열
+
+int find(int x) { // 유니온 파인드에서 x가 속한 트리의 루트 찾기
+    if (parent[x] == x) return x;
+    return parent[x] = find(parent[x]);
+}
+
+bool merge(int a, int b) { // 유니온 파인드를 이용하여 a가 속한 트리와 b가 속한 트리 합치기
+    int root1 = find(a), root2 = find(b);
+    if (root1 == root2) return false;
+    parent[root2] = root1;
+    return true;
+}
+
+int kruskal() {
+    int saved_cost = 0, cnt = 0;
+    sort(edges.begin(), edges.end()); // 가중치를 기준으로 오름차순 정렬
+    for (int i = 0; i < edges.size(); i++) {
+        int cost = edges[i].first;
+        int a = edges[i].second.first, b = edges[i].second.second;
+        if (merge(a, b)) { // 신장 트리에 연결
+            saved_cost += cost;
+            cnt++;
+        }
+        if (cnt == n - 1) break; // n-1개의 간선을 선택했으면 종료
+    }
+    return saved_cost;
+}
+
+int main() {
+    while (true) {
+        scanf(""%d %d"", &n, &m);
+        if (n == 0 && m == 0) break;
+
+        for (int i = 0; i < n; i++) {
+            parent[i] = i; // 유니온 파인드 초기화
+        }
+        edges.clear(); // 간선 리스트 초기화
+
+        int total_cost = 0;
+        for (int i = 0; i < m; i++) {
+            int a, b, c;
+            scanf(""%d %d %d"", &a, &b, &c);
+            edges.push_back({ c, {a, b} });
+            total_cost += c;
+        }
+
+        printf(""%d\n"", total_cost - kruskal()); // 전체 비용에서 신장 트리 비용 빼기
+    }
+
+    return 0;
+}"
+36,31,그래프와 순회,5,바이러스,2606,신종 바이러스인 웜 바이러스는 네트워크를 통해 전파된다. 한 컴퓨터가 웜 바이러스에 걸리면 그 컴퓨터와 네트워크 상에서 연결되어 있는 모든 컴퓨터는 웜 바이러스에 걸리게 된다.,첫째 줄에는 컴퓨터의 수가 주어진다. 컴퓨터의 수는 100 이하이고 각 컴퓨터에는 1번 부터 차례대로 번호가 매겨진다. 둘째 줄에는 네트워크 상에서 직접 연결되어 있는 컴퓨터 쌍의 수가 주어진다. 이어서 그 수만큼 한 줄에 한 쌍씩 네트워크 상에서 직접 연결되어 있는 컴퓨터의 번호 쌍이 주어진다.,"1번 컴퓨터가 웜 바이러스에 걸렸을 때, 1번 컴퓨터를 통해 웜 바이러스에 걸리게 되는 컴퓨터의 수를 첫째 줄에 출력한다.","[['7\n6\n1 2\n2 3\n1 5\n5 2\n5 6\n4 7', '4']]","#include <stdio.h>
+
+int N, M, cnt;
+int map[101][101]; // 인접 행렬
+int visit[101]; // 방문 여부 저장을 위한 배열
+
+void dfs(int start) { // dfs 함수 정의
+    visit[start] = 1; // 현재 노드 방문 여부 체크
+    cnt++; // 걸리는 컴퓨터 수 증가
+    for (int i = 1; i <= N; i++) {
+        if (visit[i] == 0 && map[start][i] == 1) { // 아직 방문하지 않았고 현재 노드와 이어진 노드인 경우
+            dfs(i); // 이어진 노드로 이동
+        }
+    }
+}
+
+int main() {
+    scanf(""%d %d"", &N, &M);
+    for (int i = 0; i < M; i++) {
+        int from, to;
+        scanf(""%d %d"", &from, &to);
+        map[from][to] = map[to][from] = 1; // 양방향 간선이므로 map에 1로 저장
+    }
+
+    dfs(1); // 1번 노드부터 dfs 탐색
+    printf(""%d\n"", cnt - 1); // 1번 노드는 제외하고 출력
+    return 0;
+}"
+37,31,그래프와 순회,7,단지번호붙이기,2667,"<그림 1>과 같이 정사각형 모양의 지도가 있다. 1은 집이 있는 곳을, 0은 집이 없는 곳을 나타낸다. 철수는 이 지도를 가지고 연결된 집의 모임인 단지를 정의하고, 단지에 번호를 붙이려 한다. 여기서 연결되었다는 것은 어떤 집이 좌우, 혹은 아래위로 다른 집이 있는 경우를 말한다. 대각선상에 집이 있는 경우는 연결된 것이 아니다. <그림 2>는 <그림 1>을 단지별로 번호를 붙인 것이다. 지도를 입력하여 단지수를 출력하고, 각 단지에 속하는 집의 수를 오름차순으로 정렬하여 출력하는 프로그램을 작성하시오.","첫 번째 줄에는 지도의 크기 N(정사각형이므로 가로와 세로의 크기는 같으며 5≤N≤25)이 입력되고, 그 다음 N줄에는 각각 N개의 자료(0혹은 1)가 입력된다.",첫 번째 줄에는 총 단지수를 출력하시오. 그리고 각 단지내 집의 수를 오름차순으로 정렬하여 한 줄에 하나씩 출력하시오.,"[['7\n0110100\n0110101\n1110101\n0000111\n0100000\n0111110\n0111000', '3\n7\n8\n9']]","#include <stdio.h>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int n, cnt;
+int map[26][26];
+int visited[26][26];
+int dr[4] = { -1, 1, 0, 0 };
+int dc[4] = { 0, 0, -1, 1 };
+vector<int> complex;
+
+void dfs(int r, int c) { // dfs로 단지의 집 개수 세기
+    visited[r][c] = 1;
+    cnt++;
+    for (int i = 0; i < 4; i++) {
+        int nr = r + dr[i];
+        int nc = c + dc[i];
+        if (nr < 0 || nr >= n || nc < 0 || nc >= n) continue;
+        if (!visited[nr][nc] && map[nr][nc]) {
+            dfs(nr, nc);
+        }
+    }
+}
+
+int main() {
+    scanf(""%d"", &n);
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf(""%1d"", &map[i][j]);
+        }
+    }
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            if (!visited[i][j] && map[i][j]) {
+                cnt = 0;
+                dfs(i, j);
+                complex.push_back(cnt);
+            }
+        }
+    }
+    sort(complex.begin(), complex.end());
+    printf(""%d\n"", complex.size());
+    for (int i = 0; i < complex.size(); i++) {
+        printf(""%d\n"", complex[i]);
+    }
+    return 0;
+}"
+38,30,스택 2,1,문자열 폭발,9935,"상근이는 문자열에 폭발 문자열을 심어 놓았다. 폭발 문자열이 폭발하면 그 문자는 문자열에서 사라지며, 남은 문자열은 합쳐지게 된다.","첫째 줄에 문자열이 주어진다. 문자열의 길이는 1보다 크거나 같고, 1,000,000보다 작거나 같다.",첫째 줄에 모든 폭발이 끝난 후 남은 문자열을 출력한다.,"[['mirkovC4nizCC44\nC4', 'mirkovniz'], ['12ab112ab2ab\n12ab', 'FRULA']]","#include <stdio.h>
+#include <string.h>
+
+char s[1000001]; // 문자열
+char bomb[37]; // 폭발 문자열
+char ans[1000001]; // 정답으로 출력할 문자열
+
+int main() {
+    scanf(""%s %s"", s, bomb); // 문자열과 폭발 문자열 입력 받기
+    int len = strlen(bomb); // 폭발 문자열 길이
+    int pos = 0; // ans 배열 인덱스를 나타내는 변수
+    int slen = strlen(s); // 문자열 길이
+    for (int i = 0; i < slen; i++) {
+        ans[pos++] = s[i]; // ans 배열에 문자 추가
+        if (ans[pos-1] == bomb[len-1] && pos >= len) { // 폭발 문자열의 마지막 문자가 추가되고, 그 이상일 경우 폭발 문자열 여부 확인
+            int check = 1;
+            for (int j = 0; j < len; j++) { // 폭발 문자열과 일치하는지 확인
+                if (ans[pos-len+j] != bomb[j]) {
+                    check = 0;
+                    break;
+                }
+            }
+            if (check) pos -= len; // 폭발 문자열일 경우 ans 배열에서 지우기
+        }
+    }
+    if (pos == 0) printf(""FRULA""); // ans 배열이 비었을 경우
+    else { // ans 배열이 비어있지 않은 경우 문자열 출력
+        for (int i = 0; i < pos; i++) {
+            printf(""%c"", ans[i]);
+        }
+    }
+    return 0;
+}"
+39,30,스택 2,2,오큰수,17298,"크기가 N인 수열 A = A1, A2, ..., AN이 있다. 수열의 각 원소 Ai에 대해서 오큰수 NGE(i)를 구하려고 한다. Ai의 오큰수는 오른쪽에 있으면서 Ai보다 큰 수 중에서 가장 왼쪽에 있는 수를 의미한다. 그러한 수가 없는 경우에 오큰수는 -1이다.","첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000,000)이 주어진다. 둘째 줄에 수열 A의 원소 A1, A2, ..., AN (1 ≤ Ai ≤ 1,000,000)이 주어진다.","총 N개의 수 NGE(1), NGE(2), ..., NGE(N)을 공백으로 구분해 출력한다.","[['4\n3 5 2 7', '5 7 7 -1'], ['4\n9 5 4 8', '-1 8 8 -1']]","#include <iostream>
+#include <stack>
+#include <vector>
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n;
+    cin >> n;
+
+    vector<int> v(n);
+    vector<int> answer(n, -1);
+    stack<int> st;
+
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
+    }
+
+    for (int i = 0; i < n; i++) {
+        while (!st.empty() && v[st.top()] < v[i]) {
+            answer[st.top()] = v[i];
+            st.pop();
+        }
+        st.push(i);
+    }
+
+    for (int i = 0; i < n; i++) {
+        cout << answer[i] << "" "";
+    }
+
+    return 0;
+}"
+40,30,스택 2,3,오등큰수,17299,"크기가 N인 수열 A = A1, A2, ..., AN이 있다. 수열의 각 원소 Ai에 대해서 오등큰수 NGF(i)를 구하려고 한다.","첫째 줄에 수열 A의 크기 N (1 ≤ N ≤ 1,000,000)이 주어진다. 둘째에 수열 A의 원소 A1, A2, ..., AN (1 ≤ Ai ≤ 1,000,000)이 주어진다.","총 N개의 수 NGF(1), NGF(2), ..., NGF(N)을 공백으로 구분해 출력한다.","[['7\n1 1 2 3 4 2 1', '-1 -1 1 2 2 1 -1']]","#include <stdio.h>
+#include <stack>
+#include <vector>
+#define MAX_N 1000000
+
+using namespace std;
+
+int n;
+int arr[MAX_N];
+int freq[MAX_N+1]; // 각 수가 나온 빈도수 저장
+int ngf[MAX_N];
+
+int main() {
+    scanf(""%d"", &n);
+
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &arr[i]);
+        freq[arr[i]]++;
+    }
+
+    stack<int> s;
+    vector<int> v;
+
+    for (int i = n-1; i >= 0; i--) {
+        while (!s.empty() && freq[arr[i]] >= freq[arr[s.top()]]) {
+            s.pop();
+        }
+        if (s.empty()) {
+            ngf[i] = -1;
+        } else {
+            ngf[i] = arr[s.top()];
+        }
+        s.push(i);
+    }
+
+    for (int i = 0; i < n; i++) {
+        printf(""%d "", ngf[i]);
+    }
+
+    return 0;
+}"
+41,30,스택 2,4,히스토그램,1725,히스토그램에 대해서 알고 있는가? 히스토그램은 아래와 같은 막대그래프를 말한다.,"첫 행에는 N (1 ≤ N ≤ 100,000) 이 주어진다. N은 히스토그램의 가로 칸의 수이다. 다음 N 행에 걸쳐 각 칸의 높이가 왼쪽에서부터 차례대로 주어진다. 각 칸의 높이는 1,000,000,000보다 작거나 같은 자연수 또는 0이다.",첫째 줄에 가장 큰 직사각형의 넓이를 출력한다. 이 값은 20억을 넘지 않는다.,"[['7\n2\n1\n4\n5\n1\n3\n3', '8']]","#include <stdio.h>
+#include <stack>
+
+using namespace std;
+
+int histogram[100000]; // 히스토그램 높이 저장 배열
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    for(int i=0; i<n; i++) {
+        scanf(""%d"", &histogram[i]);
+    }
+
+    stack<int> s; // 스택 생성
+    int max_area = 0; // 최대 직사각형의 넓이
+    for(int i=0; i<=n; i++) { // 마지막에 0을 더해야 스택을 비울 수 있음
+        while(!s.empty() && histogram[s.top()] > histogram[i]) { // 스택이 비어있지 않고, top의 높이가 i의 높이보다 높은 경우
+            int height = histogram[s.top()]; // 높이
+            s.pop(); // top에서 높이를 얻었으므로 pop
+            int width = (s.empty() ? i : i-s.top()-1); // 넓이
+            max_area = (max_area < height*width) ? height*width : max_area; // 최대 넓이
+        }
+        s.push(i); // 스택에 인덱스 삽입
+    }
+
+    printf(""%d"", max_area);
+
+    return 0;
+}"
+42,29,동적 계획법 2,2,행렬 곱셈 순서,11049,크기가 N×M인 행렬 A와 M×K인 B를 곱할 때 필요한 곱셈 연산의 수는 총 N×M×K번이다. 행렬 N개를 곱하는데 필요한 곱셈 연산의 수는 행렬을 곱하는 순서에 따라 달라지게 된다.,첫째 줄에 행렬의 개수 N(1 ≤ N ≤ 500)이 주어진다.,"첫째 줄에 입력으로 주어진 행렬을 곱하는데 필요한 곱셈 연산의 최솟값을 출력한다. 정답은 231-1 보다 작거나 같은 자연수이다. 또한, 최악의 순서로 연산해도 연산 횟수가 231-1보다 작거나 같다.","[['3\n5 3\n3 2\n2 6', '90']]","#include <stdio.h>
+#include <limits.h> // INT_MAX 사용을 위해
+
+#define MAX_N 500
+#define INF INT_MAX // 최댓값으로 INF를 정의
+
+int N;
+int matrix[MAX_N+1][2]; // 행렬의 크기를 저장하는 배열
+int dp[MAX_N+1][MAX_N+1]; // dp 테이블
+
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+int main() {
+    scanf(""%d"", &N);
+    for (int i = 1; i <= N; i++) {
+        scanf(""%d %d"", &matrix[i][0], &matrix[i][1]);
+    }
+
+    // dp 테이블 초기화
+    for (int i = 1; i <= N; i++) {
+        for (int j = 1; j <= N; j++) {
+            if (i == j) {
+                dp[i][j] = 0;
+            }
+            else {
+                dp[i][j] = INF;
+            }
+        }
+    }
+
+    // dp 테이블 채우기
+    for (int len = 1; len < N; len++) {
+        for (int i = 1; i <= N - len; i++) {
+            int j = i + len;
+            for (int k = i; k < j; k++) {
+                int cost = dp[i][k] + dp[k+1][j] + matrix[i][0] * matrix[k][1] * matrix[j][1];
+                dp[i][j] = min(dp[i][j], cost);
+            }
+        }
+    }
+
+    printf(""%d"", dp[1][N]);
+    return 0;
+}"
+43,29,동적 계획법 2,3,내리막 길,1520,"여행을 떠난 세준이는 지도를 하나 구하였다. 이 지도는 아래 그림과 같이 직사각형 모양이며 여러 칸으로 나뉘어져 있다. 한 칸은 한 지점을 나타내는데 각 칸에는 그 지점의 높이가 쓰여 있으며, 각 지점 사이의 이동은 지도에서 상하좌우 이웃한 곳끼리만 가능하다.","첫째 줄에는 지도의 세로의 크기 M과 가로의 크기 N이 빈칸을 사이에 두고 주어진다. 이어 다음 M개 줄에 걸쳐 한 줄에 N개씩 위에서부터 차례로 각 지점의 높이가 빈 칸을 사이에 두고 주어진다. M과 N은 각각 500이하의 자연수이고, 각 지점의 높이는 10000이하의 자연수이다.",첫째 줄에 이동 가능한 경로의 수 H를 출력한다. 모든 입력에 대하여 H는 10억 이하의 음이 아닌 정수이다.,"[['4 5\n50 45 37 32 30\n35 50 40 20 25\n30 30 25 17 28\n27 24 22 15 10', '3']]","#include <stdio.h>
+
+int m, n;
+int map[501][501];
+long long dp[501][501];
+
+int dx[4] = {0, 0, 1, -1};
+int dy[4] = {1, -1, 0, 0};
+
+long long dfs(int x, int y) {
+    if (dp[x][y] != -1) return dp[x][y]; // 이미 방문한 곳이면 계산된 값을 반환
+    dp[x][y] = 0;
+
+    for (int i = 0; i < 4; i++) {
+        int nx = x + dx[i]; // 다음 이동할 x 좌표
+        int ny = y + dy[i]; // 다음 이동할 y 좌표
+
+        if (nx >= 0 && nx < m && ny >= 0 && ny < n) { // 범위 내에 있을 때
+            if (map[nx][ny] < map[x][y]) // 이동할 수 있는 경우
+                dp[x][y] += dfs(nx, ny); // 다음 좌표에서부터 계산
+        }
+    }
+
+    return dp[x][y];
+}
+
+int main() {
+    scanf(""%d %d"", &m, &n);
+
+    for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf(""%d"", &map[i][j]);
+            dp[i][j] = -1; // dp 배열을 -1로 초기화
+            // -1인 경우는 방문하지 않은 곳을 의미
+        }
+    }
+
+    dp[m - 1][n - 1] = 1; // 도착점은 1가지 방법으로 갈 수 있음
+    printf(""%lld"", dfs(0, 0)); // 출발점에서부터 계산
+
+    return 0;
+}"
+44,17,조합론,4,이항 계수 1,11050,"자연수
+N
+\(N\)과 정수
+K
+\(K\)가 주어졌을 때 이항 계수
+(
+N
+K
+)
+\(\binom{N}{K}\)를 구하는 프로그램을 작성하시오.","첫째 줄에
+N
+\(N\)과
+K
+\(K\)가 주어진다. (1 ≤
+N
+\(N\) ≤ 10, 0 ≤
+K
+\(K\) ≤
+N
+\(N\))"," (
+N
+K
+)
+\(\binom{N}{K}\)를 출력한다.","[['5 2', '10']]","#include <stdio.h>
+
+int main() {
+    int n, k, i, j;
+    int bin_coef[11][11] = {0}; // 이항 계수 저장 배열
+
+    scanf(""%d %d"", &n, &k);
+
+    // 이항 계수 구하기
+    for (i = 0; i <= n; i++) {
+        bin_coef[i][0] = 1; // nC0 = 1
+        bin_coef[i][i] = 1; // nCn = 1
+    }
+    for (i = 2; i <= n; i++) {
+        for (j = 1; j < i; j++) {
+            bin_coef[i][j] = bin_coef[i - 1][j - 1] + bin_coef[i - 1][j]; // 파스칼의 삼각형 이용
+        }
+    }
+
+    printf(""%d\n"", bin_coef[n][k]);
+
+    return 0;
+}"
+45,17,조합론,5,다리 놓기,1010,재원이는 한 도시의 시장이 되었다. 이 도시에는 도시를 동쪽과 서쪽으로 나누는 큰 일직선 모양의 강이 흐르고 있다. 하지만 재원이는 다리가 없어서 시민들이 강을 건너는데 큰 불편을 겪고 있음을 알고 다리를 짓기로 결심하였다. 강 주변에서 다리를 짓기에 적합한 곳을 사이트라고 한다. 재원이는 강 주변을 면밀히 조사해 본 결과 강의 서쪽에는 N개의 사이트가 있고 동쪽에는 M개의 사이트가 있다는 것을 알았다. (N ≤ M),"입력의 첫 줄에는 테스트 케이스의 개수 T가 주어진다. 그 다음 줄부터 각각의 테스트케이스에 대해 강의 서쪽과 동쪽에 있는 사이트의 개수 정수 N, M (0 < N ≤ M < 30)이 주어진다.",각 테스트 케이스에 대해 주어진 조건하에 다리를 지을 수 있는 경우의 수를 출력한다.,"[['3\n2 2\n1 5\n13 29', '1\n5\n67863915']]","#include <stdio.h>
+
+int main() {
+    int T, i;
+    scanf(""%d"", &T); // 테스트 케이스의 개수 입력
+    for(i=0; i<T; i++) {
+        int N, M, j;
+        scanf(""%d %d"", &N, &M); // 각각의 테스트 케이스에 대해 강의 서쪽과 동쪽에 있는 사이트의 개수 입력
+        int dp[31][31] = {0}; // 다리를 지을 수 있는 경우의 수를 저장할 DP 배열 초기화
+        for(j=1; j<=M; j++) dp[1][j] = j; // 초기값 설정
+        for(j=2; j<=N; j++) {
+            for(int k=j; k<=M; k++) {
+                for(int l=j-1; l<k; l++) {
+                    dp[j][k] += dp[j-1][l]; // 점화식 적용
+                }
+            }
+        }
+        printf(""%d\n"", dp[N][M]); // 각각의 테스트 케이스에 대해 다리를 지을 수 있는 경우의 수 출력
+    }
+    return 0;
+}"
+46,18,심화 2,1,약수,1037,"양수 A가 N의 진짜 약수가 되려면, N이 A의 배수이고, A가 1과 N이 아니어야 한다. 어떤 수 N의 진짜 약수가 모두 주어질 때, N을 구하는 프로그램을 작성하시오.","첫째 줄에 N의 진짜 약수의 개수가 주어진다. 이 개수는 50보다 작거나 같은 자연수이다. 둘째 줄에는 N의 진짜 약수가 주어진다. 1,000,000보다 작거나 같고, 2보다 크거나 같은 자연수이고, 중복되지 않는다.",첫째 줄에 N을 출력한다. N은 항상 32비트 부호있는 정수로 표현할 수 있다.,"[['2\n4 2', '8'], ['1\n2', '4'], ['6\n3 4 2 12 6 8', '24'], ['14\n14 26456 2 28 13228 3307 7 23149 8 6614 46298 56 4 92596', '185192']]","#include <stdio.h>
+#include <algorithm>
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &arr[i]);
+    }
+
+    std::sort(arr, arr+n); // 입력 받은 진짜 약수를 오름차순으로 정렬
+    int res = arr[0] * arr[n-1]; // 진짜 약수 중 가장 작은 값과 큰 값의 곱이 N이 됨
+
+    printf(""%d\n"", res);
+
+    return 0;
+}"
+47,10,기하: 직사각형과 삼각형,1,직사각형,27323,"정수 A, B 가 주어진다. 세로 길이가 A cm, 가로 길이가 B cm 인 아래와 같은 직사각형의 넓이를 cm2 단위로 구하시오.",표준 입력에 다음과 같은 형태로 입력이 주어진다.,"세로 길이가 A cm, 가로 길이가 B cm인 직사각형의 넓이를 cm2 단위로 구하고, 단위 (cm2)를 생략하여 출력한다.","[['2\n3', '6'], ['100\n1', '100'], ['4\n4', '16']]","#include <stdio.h>
+
+int main() {
+    int a, b, area;
+    scanf(""%d %d"", &a, &b);
+    area = a * b;
+    printf(""%d"", area);
+    return 0;
+}"
+48,10,기하: 직사각형과 삼각형,2,직사각형에서 탈출,1085,"한수는 지금 (x, y)에 있다. 직사각형은 각 변이 좌표축에 평행하고, 왼쪽 아래 꼭짓점은 (0, 0), 오른쪽 위 꼭짓점은 (w, h)에 있다. 직사각형의 경계선까지 가는 거리의 최솟값을 구하는 프로그램을 작성하시오.","첫째 줄에 x, y, w, h가 주어진다.",첫째 줄에 문제의 정답을 출력한다.,"[['6 2 10 3', '1'], ['1 1 5 5', '1'], ['653 375 1000 1000', '347'], ['161 181 762 375', '161']]","#include <stdio.h>
+
+int main() {
+    int x, y, w, h;
+    scanf(""%d %d %d %d"", &x, &y, &w, &h);
+    int min_distance = w - x > h - y ? h - y : w - x;
+    min_distance = min_distance > x ? x : min_distance;
+    min_distance = min_distance > y ? y : min_distance;
+    printf(""%d\n"", min_distance);
+    return 0;
+}"
+49,10,기하: 직사각형과 삼각형,3,네 번째 점,3009,"세 점이 주어졌을 때, 축에 평행한 직사각형을 만들기 위해서 필요한 네 번째 점을 찾는 프로그램을 작성하시오.","세 점의 좌표가 한 줄에 하나씩 주어진다. 좌표는 1보다 크거나 같고, 1000보다 작거나 같은 정수이다.",직사각형의 네 번째 점의 좌표를 출력한다.,"[['5 5\n5 7\n7 5', '7 7'], ['30 20\n10 10\n10 20', '30 10']]","#include <stdio.h>
+
+int main() {
+    int x[3], y[3];
+    for (int i = 0; i < 3; i++) {
+        scanf(""%d %d"", &x[i], &y[i]);
+    }
+    int x4 = x[0] == x[1] ? x[2] : (x[0] == x[2] ? x[1] : x[0]);
+    int y4 = y[0] == y[1] ? y[2] : (y[0] == y[2] ? y[1] : y[0]);
+    printf(""%d %d"", x4, y4);
+    return 0;
+}"
+50,10,기하: 직사각형과 삼각형,5,대지,9063," 임씨는 1950 년 한국전쟁으로 많은 손해를 본 사람들 중 하나다. 전쟁 통에 손해보지 않은 사람이 어디 있을까 만은 그는 6.25 가 일어나기 전만 해도 충청도 지방에 넓은 대지를 소유한 큰 부자였다. 전쟁이 나자 임씨는 땅문서와 값 나가는 것들만 챙겨서 일본으로 피난을 가지만 피난 중에 그만 땅문서를 잃어버리고 만다. 전쟁이 끝난 후에 임씨의 땅은 이미 다른 사람들의 논밭이 되어 있었고, 임씨는 땅을 되찾으려 했지만 문서가 없으니 생떼 쓰는 것과 다를 바 없었다. 이러다가 임씨는 길바닥에 나앉게 생겼다.","첫째 줄에는 점의 개수 N (1 ≤ N ≤ 100,000) 이 주어진다. 이어지는 N 줄에는 각 점의 좌표가 두 개의 정수로 한 줄에 하나씩 주어진다. 각각의 좌표는 -10,000 이상 10,000 이하의 정수이다. ",첫째 줄에 N 개의 점을 둘러싸는 최소 크기의 직사각형의 넓이를 출력하시오. ,"[['3\n20 24\n40 21\n10 12', '360'], ['1\n15 13', '0'], ['4\n2 1\n3 2\n5 2\n3 4', '9']]","#include <stdio.h>
+#include <limits.h>
+
+int main() {
+    int n, x, y, min_x = INT_MAX, min_y = INT_MAX, max_x = INT_MIN, max_y = INT_MIN; // x, y 좌표의 최솟값과 최댓값을 저장하기 위한 변수
+    scanf(""%d"", &n);
+    for (int i = 0; i < n; i++) {
+        scanf(""%d %d"", &x, &y);
+        if (x < min_x) min_x = x; // x 좌표의 최솟값 찾기
+        if (x > max_x) max_x = x; // x 좌표의 최댓값 찾기
+        if (y < min_y) min_y = y; // y 좌표의 최솟값 찾기
+        if (y > max_y) max_y = y; // y 좌표의 최댓값 찾기
+    }
+    int width = max_x - min_x; // 가로 길이
+    int height = max_y - min_y ; // 세로 길이
+    printf(""%d"", width * height); // 직사각형의 넓이 출력
+    return 0;
+}"
+51,10,기하: 직사각형과 삼각형,6,삼각형 외우기,10101,창영이는 삼각형의 종류를 잘 구분하지 못한다. 따라서 프로그램을 이용해 이를 외우려고 한다.,"총 3개의 줄에 걸쳐 삼각형의 각의 크기가 주어진다. 모든 정수는 0보다 크고, 180보다 작다.","문제의 설명에 따라 Equilateral, Isosceles, Scalene, Error 중 하나를 출력한다.","[['60\n70\n50', 'Scalene']]","#include <stdio.h>
+
+int main() {
+    int a, b, c;
+    scanf(""%d %d %d"", &a, &b, &c);
+
+    if (a + b + c != 180) {
+        printf(""Error\n"");
+    } else if (a == b && b == c) {
+        printf(""Equilateral\n"");
+    } else if (a == b || b == c || c == a) {
+        printf(""Isosceles\n"");
+    } else {
+        printf(""Scalene\n"");
+    }
+
+    return 0;
+}"
+52,10,기하: 직사각형과 삼각형,7,삼각형과 세 변,5073,삼각형의 세 변의 길이가 주어질 때 변의 길이에 따라 다음과 같이 정의한다.,"각 줄에는 1,000을 넘지 않는 양의 정수 3개가 입력된다. 마지막 줄은 0 0 0이며 이 줄은 계산하지 않는다.","각 입력에 맞는 결과 (Equilateral, Isosceles, Scalene, Invalid) 를 출력하시오.","[['7 7 7\n6 5 4\n3 2 5\n6 2 6\n0 0 0', 'Equilateral\nScalene\nInvalid\nIsosceles']]","#include <stdio.h>
+
+int main() {
+    int a, b, c;
+
+    while (1) {
+        scanf(""%d %d %d"", &a, &b, &c);
+        if (a == 0 && b == 0 && c == 0) break; // 입력이 0 0 0이면 종료
+
+        if (a + b <= c || b + c <= a || c + a <= b) {
+            printf(""Invalid\n"");
+        } else if (a == b && b == c) {
+            printf(""Equilateral\n"");
+        } else if (a == b || b == c || c == a) {
+            printf(""Isosceles\n"");
+        } else {
+            printf(""Scalene\n"");
+        }
+    }
+
+    return 0;
+}"
+53,12,브루트 포스,1,블랙잭,2798,"카지노에서 제일 인기 있는 게임 블랙잭의 규칙은 상당히 쉽다. 카드의 합이 21을 넘지 않는 한도 내에서, 카드의 합을 최대한 크게 만드는 게임이다. 블랙잭은 카지노마다 다양한 규정이 있다.","첫째 줄에 카드의 개수 N(3 ≤ N ≤ 100)과 M(10 ≤ M ≤ 300,000)이 주어진다. 둘째 줄에는 카드에 쓰여 있는 수가 주어지며, 이 값은 100,000을 넘지 않는 양의 정수이다.",첫째 줄에 M을 넘지 않으면서 M에 최대한 가까운 카드 3장의 합을 출력한다.,"[['5 21\n5 6 7 8 9', '21'], ['10 500\n93 181 245 214 315 36 185 138 216 295', '497']]","#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+int n, m, result;
+int card[100];
+
+int main() {
+    scanf(""%d %d"", &n, &m);
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &card[i]);
+    }
+
+    // 3개의 카드 중 하나를 선택하는 3중 반복문
+    for (int i = 0; i < n; i++) {
+        for (int j = i+1; j < n; j++) {
+            for (int k = j+1; k < n; k++) {
+                int sum = card[i] + card[j] + card[k];
+                if (sum <= m) { // sum이 m을 넘지 않으면서 최대인 경우 갱신
+                    result = max(result, sum);
+                }
+            }
+        }
+    }
+
+    printf(""%d"", result);
+    return 0;
+}"
+54,12,브루트 포스,2,분해합,2231,"어떤 자연수 N이 있을 때, 그 자연수 N의 분해합은 N과 N을 이루는 각 자리수의 합을 의미한다. 어떤 자연수 M의 분해합이 N인 경우, M을 N의 생성자라 한다. 예를 들어, 245의 분해합은 256(=245+2+4+5)이 된다. 따라서 245는 256의 생성자가 된다. 물론, 어떤 자연수의 경우에는 생성자가 없을 수도 있다. 반대로, 생성자가 여러 개인 자연수도 있을 수 있다.","첫째 줄에 자연수 N(1 ≤ N ≤ 1,000,000)이 주어진다.",첫째 줄에 답을 출력한다. 생성자가 없는 경우에는 0을 출력한다.,"[['216', '198']]","#include <iostream>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    for (int i = 1; i <= n; i++) { // 1부터 n까지 모든 수에 대해서
+        int sum = i, num = i;
+        while (num > 0) { // 각 자리수의 합 구하기
+            sum += num % 10;
+            num /= 10;
+        }
+        if (sum == n) { // 분해합이 n인 경우
+            cout << i << '\n'; // i는 n의 생성자이므로 출력하고 종료
+            return 0;
+        }
+    }
+
+    cout << 0 << '\n'; // 생성자를 찾지 못한 경우 0 출력
+    return 0;
+}"
+55,12,브루트 포스,4,체스판 다시 칠하기,1018,"지민이는 자신의 저택에서 MN개의 단위 정사각형으로 나누어져 있는 M×N 크기의 보드를 찾았다. 어떤 정사각형은 검은색으로 칠해져 있고, 나머지는 흰색으로 칠해져 있다. 지민이는 이 보드를 잘라서 8×8 크기의 체스판으로 만들려고 한다.","첫째 줄에 N과 M이 주어진다. N과 M은 8보다 크거나 같고, 50보다 작거나 같은 자연수이다. 둘째 줄부터 N개의 줄에는 보드의 각 행의 상태가 주어진다. B는 검은색이며, W는 흰색이다.",첫째 줄에 지민이가 다시 칠해야 하는 정사각형 개수의 최솟값을 출력한다.,"[['8 8\nWBWBWBWB\nBWBWBWBW\nWBWBWBWB\nBWBBBWBW\nWBWBWBWB\nBWBWBWBW\nWBWBWBWB\nBWBWBWBW', '1'], ['10 13\nBBBBBBBBWBWBW\nBBBBBBBBBWBWB\nBBBBBBBBWBWBW\nBBBBBBBBBWBWB\nBBBBBBBBWBWBW\nBBBBBBBBBWBWB\nBBBBBBBBWBWBW\nBBBBBBBBBWBWB\nWWWWWWWWWWBWB\nWWWWWWWWWWBWB', '12'], ['8 8\nBWBWBWBW\nWBWBWBWB\nBWBWBWBW\nWBWBWBWB\nBWBWBWBW\nWBWBWBWB\nBWBWBWBW\nWBWBWBWB', '0'], ['9 23\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBB\nBBBBBBBBBBBBBBBBBBBBBBW', '31'], ['10 10\nBBBBBBBBBB\nBBWBWBWBWB\nBWBWBWBWBB\nBBWBWBWBWB\nBWBWBWBWBB\nBBWBWBWBWB\nBWBWBWBWBB\nBBWBWBWBWB\nBWBWBWBWBB\nBBBBBBBBBB', '0'], ['8 8\nWBWBWBWB\nBWBWBWBW\nWBWBWBWB\nBWBBBWBW\nWBWBWBWB\nBWBWBWBW\nWBWBWWWB\nBWBWBWBW', '2'], ['11 12\nBWWBWWBWWBWW\nBWWBWBBWWBWW\nWBWWBWBBWWBW\nBWWBWBBWWBWW\nWBWWBWBBWWBW\nBWWBWBBWWBWW\nWBWWBWBBWWBW\nBWWBWBWWWBWW\nWBWWBWBBWWBW\nBWWBWBBWWBWW\nWBWWBWBBWWBW', '15']]","#include <stdio.h>
+#define MAX_N 50
+#define MAX_M 50
+
+int N, M;
+char board[MAX_N][MAX_M+1]; // 보드 상태를 저장하는 2차원 배열
+
+int paint(int x, int y) { // (x, y)를 왼쪽 위 모서리로 하는 8x8 체스판을 다시 칠해야하는 최소 개수 반환
+    int cnt1 = 0, cnt2 = 0; // cnt1: 왼쪽 위 모서리가 W인 경우 칠하는 최소 개수, cnt2: 왼쪽 위 모서리가 B인 경우 칠하는 최소 개수
+    for (int i = x; i < x + 8; i++) {
+        for (int j = y; j < y + 8; j++) {
+            if ((i + j) % 2 == 0) { // (i, j)가 흰색이어야 하는 경우
+                if (board[i][j] == 'B') cnt1++;
+                else cnt2++;
+            } else { // (i, j)가 검은색이어야 하는 경우
+                if (board[i][j] == 'W') cnt1++;
+                else cnt2++;
+            }
+        }
+    }
+    return cnt1 < cnt2 ? cnt1 : cnt2; // 더 적게 칠하는 최소 개수 반환
+}
+
+int main() {
+    scanf(""%d %d"", &N, &M);
+    for (int i = 0; i < N; i++) {
+        scanf(""%s"", board[i]);
+    }
+
+    int min_cnt = N*M; // 모든 칸을 다시 칠해야하는 경우가 최악의 경우이므로, 최대값으로 초기화
+    for (int i = 0; i <= N-8; i++) {
+        for (int j = 0; j <= M-8; j++) {
+            int cnt = paint(i, j); // (i, j)를 왼쪽 위 모서리로 하는 8x8 체스판을 다시 칠해야하는 최소 개수
+            if (cnt < min_cnt) min_cnt = cnt;
+        }
+    }
+
+    printf(""%d\n"", min_cnt); // 최소값 출력
+
+    return 0;
+}"
+56,12,브루트 포스,5,영화감독 숌,1436,"666은 종말을 나타내는 수라고 한다. 따라서, 많은 블록버스터 영화에서는 666이 들어간 제목을 많이 사용한다. 영화감독 숌은 세상의 종말 이라는 시리즈 영화의 감독이다. 조지 루카스는 스타워즈를 만들 때, 스타워즈 1, 스타워즈 2, 스타워즈 3, 스타워즈 4, 스타워즈 5, 스타워즈 6과 같이 이름을 지었고, 피터 잭슨은 반지의 제왕을 만들 때, 반지의 제왕 1, 반지의 제왕 2, 반지의 제왕 3과 같이 영화 제목을 지었다. 하지만 숌은 자신이 조지 루카스와 피터 잭슨을 뛰어넘는다는 것을 보여주기 위해서 영화 제목을 좀 다르게 만들기로 했다.","첫째 줄에 N이 주어진다. N은 10,000보다 작거나 같은 자연수이다.",첫째 줄에 N번째 영화의 제목에 들어간 수를 출력한다.,"[['2', '1666'], ['3', '2666'], ['6', '5666'], ['187', '66666'], ['500', '166699']]","#include <stdio.h>
+
+int main() {
+    int n, cnt = 0, num = 665; // num 초기값은 665
+    scanf(""%d"", &n);
+
+    while(cnt < n) {
+        num++; // 1씩 증가시키며
+        int temp = num; // temp에 복사
+        while(temp >= 666) { // 666 이상이라면
+            if(temp % 1000 == 666) { // 뒤 3자리 확인
+                cnt++; // 666이 있다면 cnt 증가
+                break;
+            }
+            temp /= 10; // 한 자리씩 앞으로 이동
+        }
+    }
+
+    printf(""%d"", num);
+    return 0;
+}"
+57,12,브루트 포스,6,설탕 배달,2839,상근이는 요즘 설탕공장에서 설탕을 배달하고 있다. 상근이는 지금 사탕가게에 설탕을 정확하게 N킬로그램을 배달해야 한다. 설탕공장에서 만드는 설탕은 봉지에 담겨져 있다. 봉지는 3킬로그램 봉지와 5킬로그램 봉지가 있다.,첫째 줄에 N이 주어진다. (3 ≤ N ≤ 5000),"상근이가 배달하는 봉지의 최소 개수를 출력한다. 만약, 정확하게 N킬로그램을 만들 수 없다면 -1을 출력한다.","[['18', '4'], ['4', '-1'], ['6', '2'], ['9', '3'], ['11', '3']]","#include <stdio.h>
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    int count = -1;
+    for (int i = n / 5; i >= 0; i--) {
+        if ((n - (i * 5)) % 3 == 0) {
+            count = i + (n - (i * 5)) / 3;
+            break;
+        }
+    }
+
+    printf(""%d\n"", count);
+
+    return 0;
+}"
+58,13,정렬,1,수 정렬하기,2750,"N개의 수가 주어졌을 때, 이를 오름차순으로 정렬하는 프로그램을 작성하시오.","첫째 줄에 수의 개수 N(1 ≤ N ≤ 1,000)이 주어진다. 둘째 줄부터 N개의 줄에는 수가 주어진다. 이 수는 절댓값이 1,000보다 작거나 같은 정수이다. 수는 중복되지 않는다.",첫째 줄부터 N개의 줄에 오름차순으로 정렬한 결과를 한 줄에 하나씩 출력한다.,"[['5\n5\n2\n3\n4\n1', '1\n2\n3\n4\n5']]","#include <stdio.h>
+#include <stdlib.h>
+
+int compare(const void* a, const void* b) { // 오름차순 비교 함수
+    if (*(int*)a > *(int*)b) return 1;
+    else if (*(int*)a < *(int*)b) return -1;
+    else return 0;
+}
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    int arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &arr[i]); // 수 입력받음
+    }
+
+    qsort(arr, n, sizeof(int), compare); // 퀵 정렬 함수를 이용하여 오름차순으로 정렬
+
+    for (int i = 0; i < n; i++) {
+        printf(""%d\n"", arr[i]); // 정렬된 수 출력
+    }
+
+    return 0;
+}"
+59,13,정렬,2,대표값2,2587,"어떤 수들이 있을 때, 그 수들을 대표하는 값으로 가장 흔하게 쓰이는 것은 평균이다. 평균은 주어진 모든 수의 합을 수의 개수로 나눈 것이다. 예를 들어 10, 40, 30, 60, 30의 평균은 (10 + 40 + 30 + 60 + 30) / 5 = 170 / 5 = 34가 된다.",첫째 줄부터 다섯 번째 줄까지 한 줄에 하나씩 자연수가 주어진다. 주어지는 자연수는 100 보다 작은 10의 배수이다.,"첫째 줄에는 평균을 출력하고, 둘째 줄에는 중앙값을 출력한다. 평균과 중앙값은 모두 자연수이다.","[['10\n40\n30\n60\n30', '34\n30']]","#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+int arr[5];
+
+int main() {
+    int sum = 0;
+    for (int i = 0; i < 5; i++) {
+        scanf(""%d"", &arr[i]);
+        sum += arr[i]; // 입력받은 수들의 합을 구함
+    }
+
+    sort(arr, arr + 5); // 수들을 오름차순으로 정렬
+
+    printf(""%d\n%d"", sum / 5, arr[2]); // 평균과 중앙값 출력
+
+    return 0;
+}"
+60,13,정렬,3,커트라인,25305,"2022 연세대학교 미래캠퍼스 슬기로운 코딩생활에
+N
+$N$명의 학생들이 응시했다.","첫째 줄에는 응시자의 수
+N
+$N$과 상을 받는 사람의 수
+k
+$k$가 공백을 사이에 두고 주어진다.",상을 받는 커트라인을 출력하라.,"[['5 2\n100 76 85 93 98', '98']]","#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <stdlib.h>
+
+int cmp(const void *a, const void *b) {
+    return *(int*)b - *(int*)a;
+}
+
+int main() {
+    int n, k;
+    scanf(""%d %d"", &n, &k);
+
+    int scores[n];
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &scores[i]);
+    }
+
+    qsort(scores, n, sizeof(int), cmp);
+
+    printf(""%d"", scores[k-1]);
+
+    return 0;
+}"
+61,13,정렬,4,수 정렬하기 2,2751,"N개의 수가 주어졌을 때, 이를 오름차순으로 정렬하는 프로그램을 작성하시오.","첫째 줄에 수의 개수 N(1 ≤ N ≤ 1,000,000)이 주어진다. 둘째 줄부터 N개의 줄에는 수가 주어진다. 이 수는 절댓값이 1,000,000보다 작거나 같은 정수이다. 수는 중복되지 않는다.",첫째 줄부터 N개의 줄에 오름차순으로 정렬한 결과를 한 줄에 하나씩 출력한다.,"[['5\n5\n4\n3\n2\n1', '1\n2\n3\n4\n5']]","#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+int arr[1000000];
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    for(int i=0; i<n; i++) {
+        scanf(""%d"", &arr[i]);
+    }
+
+    sort(arr, arr+n); // 오름차순 정렬
+
+    for(int i=0; i<n; i++) {
+        printf(""%d\n"", arr[i]);
+    }
+
+    return 0;
+}"
+62,13,정렬,6,소트인사이드,1427,"배열을 정렬하는 것은 쉽다. 수가 주어지면, 그 수의 각 자리수를 내림차순으로 정렬해보자.","첫째 줄에 정렬하려고 하는 수 N이 주어진다. N은 1,000,000,000보다 작거나 같은 자연수이다.",첫째 줄에 자리수를 내림차순으로 정렬한 수를 출력한다.,"[['2143', '4321'], ['999998999', '999999998'], ['61423', '64321'], ['500613009', '965310000']]","#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int desc(const void *a, const void *b) {
+    return *(char*)b - *(char*)a; // 내림차순 정렬을 위한 비교 함수
+}
+
+int main() {
+    char str[11]; // 정렬할 수를 문자열로 입력 받음
+    scanf(""%s"", str);
+
+    int len = strlen(str);
+    qsort(str, len, sizeof(char), desc); // qsort 함수를 이용한 내림차순 정렬
+
+    printf(""%s\n"", str);
+
+    return 0;
+}"
+63,13,정렬,7,좌표 정렬하기,11650,"2차원 평면 위의 점 N개가 주어진다. 좌표를 x좌표가 증가하는 순으로, x좌표가 같으면 y좌표가 증가하는 순서로 정렬한 다음 출력하는 프로그램을 작성하시오.","첫째 줄에 점의 개수 N (1 ≤ N ≤ 100,000)이 주어진다. 둘째 줄부터 N개의 줄에는 i번점의 위치 xi와 yi가 주어진다. (-100,000 ≤ xi, yi ≤ 100,000) 좌표는 항상 정수이고, 위치가 같은 두 점은 없다.",첫째 줄부터 N개의 줄에 점을 정렬한 결과를 출력한다.,"[['5\n3 4\n1 1\n1 -1\n2 2\n3 3', '1 -1\n1 1\n2 2\n3 3\n3 4']]","#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+struct point { // 좌표 구조체
+    int x, y;
+};
+
+bool cmp(const point& a, const point& b) { // 정렬 기준 함수
+    if (a.x == b.x) { // x좌표가 같은 경우
+        return a.y < b.y; // y좌표가 증가하는 순으로 정렬
+    } else { // x좌표가 다른 경우
+        return a.x < b.x; // x좌표가 증가하는 순으로 정렬
+    }
+}
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    point arr[n];
+    for (int i = 0; i < n; i++) {
+        scanf(""%d %d"", &arr[i].x, &arr[i].y);
+    }
+
+    sort(arr, arr+n, cmp); // 좌표 정렬
+
+    for (int i = 0; i < n; i++) {
+        printf(""%d %d\n"", arr[i].x, arr[i].y); // 정렬된 좌표 출력
+    }
+
+    return 0;
+}"
+64,13,정렬,8,좌표 정렬하기 2,11651,"2차원 평면 위의 점 N개가 주어진다. 좌표를 y좌표가 증가하는 순으로, y좌표가 같으면 x좌표가 증가하는 순서로 정렬한 다음 출력하는 프로그램을 작성하시오.","첫째 줄에 점의 개수 N (1 ≤ N ≤ 100,000)이 주어진다. 둘째 줄부터 N개의 줄에는 i번점의 위치 xi와 yi가 주어진다. (-100,000 ≤ xi, yi ≤ 100,000) 좌표는 항상 정수이고, 위치가 같은 두 점은 없다.",첫째 줄부터 N개의 줄에 점을 정렬한 결과를 출력한다.,"[['5\n0 4\n1 2\n1 -1\n2 2\n3 3', '1 -1\n1 2\n2 2\n3 3\n0 4']]","#include <stdio.h>
+#include <algorithm>
+
+#define MAX_N 100000 // 최대 점의 개수
+
+using namespace std;
+
+typedef struct _point {
+    int x, y;
+} Point;
+
+bool cmp(const Point &a, const Point &b) { // 정렬 기준 함수
+    if (a.y == b.y) return a.x < b.x; // y 좌표가 같으면 x 좌표 순으로 정렬
+    else return a.y < b.y; // y 좌표가 다르면 y 좌표 순으로 정렬
+}
+
+int main() {
+    int n;
+    Point points[MAX_N]; // 점들을 저장할 구조체 배열
+
+    scanf(""%d"", &n);
+    for (int i = 0; i < n; i++) {
+        scanf(""%d %d"", &points[i].x, &points[i].y);
+    }
+    sort(points, points+n, cmp); // 구조체를 정렬
+
+    for (int i = 0; i < n; i++) {
+        printf(""%d %d\n"", points[i].x, points[i].y); // 정렬된 순서대로 출력
+    }
+
+    return 0;
+}"
+65,13,정렬,9,단어 정렬,1181,알파벳 소문자로 이루어진 N개의 단어가 들어오면 아래와 같은 조건에 따라 정렬하는 프로그램을 작성하시오.,"첫째 줄에 단어의 개수 N이 주어진다. (1 ≤ N ≤ 20,000) 둘째 줄부터 N개의 줄에 걸쳐 알파벳 소문자로 이루어진 단어가 한 줄에 하나씩 주어진다. 주어지는 문자열의 길이는 50을 넘지 않는다.",조건에 따라 정렬하여 단어들을 출력한다.,"[['13\nbut\ni\nwont\nhesitate\nno\nmore\nno\nmore\nit\ncannot\nwait\nim\nyours', 'i\nim\nit\nno\nbut\nmore\nwait\nwont\nyours\ncannot\nhesitate']]","#include<iostream>
+#include<algorithm>
+#include<vector>
+#include<string>
+using namespace std;
+
+int main() {
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+
+    int n;
+    cin >> n;
+
+    vector<string> v(n);
+
+    for (int i = 0; i < n; i++) {
+        cin >> v[i];
+    }
+
+    sort(v.begin(), v.end(), [](const string& a, const string& b) {
+        if (a.size() == b.size()) {
+            return a < b;
+        }
+        return a.size() < b.size();
+        });
+
+    v.erase(unique(v.begin(), v.end()), v.end());
+
+    for (const string& s : v) {
+        cout << s << '\n';
+    }
+
+    return 0;
+}"
+66,13,정렬,10,나이순 정렬,10814,"온라인 저지에 가입한 사람들의 나이와 이름이 가입한 순서대로 주어진다. 이때, 회원들을 나이가 증가하는 순으로, 나이가 같으면 먼저 가입한 사람이 앞에 오는 순서로 정렬하는 프로그램을 작성하시오.","첫째 줄에 온라인 저지 회원의 수 N이 주어진다. (1 ≤ N ≤ 100,000)","첫째 줄부터 총 N개의 줄에 걸쳐 온라인 저지 회원을 나이 순, 나이가 같으면 가입한 순으로 한 줄에 한 명씩 나이와 이름을 공백으로 구분해 출력한다.","[['3\n21 Junkyu\n21 Dohyun\n20 Sunyoung', '20 Sunyoung\n21 Junkyu\n21 Dohyun']]","#include <stdio.h>
+#include <algorithm>
+#include <string>
+#include <vector>
+using namespace std;
+
+struct Member {
+    int age;
+    string name;
+    int order; // 가입한 순서
+};
+
+bool cmp(const Member& a, const Member& b) { // 비교 함수
+    if (a.age == b.age) {
+        return a.order < b.order; // 가입한 순서로 정렬
+    }
+    return a.age < b.age;
+}
+
+int main() {
+    int N;
+    vector<Member> members;
+
+    scanf(""%d"", &N);
+
+    // 입력 받기
+    for (int i = 0; i < N; i++) {
+        int age;
+        char name[101];
+        scanf(""%d %s"", &age, name);
+        members.push_back({ age, name, i }); // 가입한 순서를 저장
+    }
+
+    sort(members.begin(), members.end(), cmp); // 비교 함수로 정렬
+
+    // 출력하기
+    for (int i = 0; i < N; i++) {
+        printf(""%d %s\n"", members[i].age, members[i].name.c_str()); // string을 char 배열로 변환하여 출력
+    }
+
+    return 0;
+}"
+67,13,정렬,11,좌표 압축,18870,"수직선 위에 N개의 좌표 X1, X2, ..., XN이 있다. 이 좌표에 좌표 압축을 적용하려고 한다.",첫째 줄에 N이 주어진다.,"첫째 줄에 X'1, X'2, ..., X'N을 공백 한 칸으로 구분해서 출력한다.","[['5\n2 4 -10 4 -9', '2 3 0 3 1'], ['6\n1000 999 1000 999 1000 999', '1 0 1 0 1 0']]","#include <stdio.h>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    vector<int> x(n);
+    for(int i=0; i<n; i++) {
+        scanf(""%d"", &x[i]);
+    }
+
+    vector<int> sorted_x = x; // 복사
+    sort(sorted_x.begin(), sorted_x.end()); // 정렬
+    sorted_x.erase(unique(sorted_x.begin(), sorted_x.end()), sorted_x.end()); // 중복 제거
+
+    for(int i=0; i<n; i++) { // 정렬된 배열에서 현재 좌표 위치 찾아 출력
+        printf(""%d "", lower_bound(sorted_x.begin(), sorted_x.end(), x[i]) - sorted_x.begin());
+    }
+
+    return 0;
+}"
+68,14,집합과 맵,1,숫자 카드,10815,"숫자 카드는 정수 하나가 적혀져 있는 카드이다. 상근이는 숫자 카드 N개를 가지고 있다. 정수 M개가 주어졌을 때, 이 수가 적혀있는 숫자 카드를 상근이가 가지고 있는지 아닌지를 구하는 프로그램을 작성하시오.","첫째 줄에 상근이가 가지고 있는 숫자 카드의 개수 N(1 ≤ N ≤ 500,000)이 주어진다. 둘째 줄에는 숫자 카드에 적혀있는 정수가 주어진다. 숫자 카드에 적혀있는 수는 -10,000,000보다 크거나 같고, 10,000,000보다 작거나 같다. 두 숫자 카드에 같은 수가 적혀있는 경우는 없다.","첫째 줄에 입력으로 주어진 M개의 수에 대해서, 각 수가 적힌 숫자 카드를 상근이가 가지고 있으면 1을, 아니면 0을 공백으로 구분해 출력한다.","[['5\n6 3 2 10 -10\n8\n10 9 -5 2 3 4 5 -10', '1 0 0 1 1 0 0 1']]","#include <stdio.h>
+#include <stdlib.h>
+
+int num[500000];
+
+int cmp(const void *a, const void *b) { // qsort를 위한 비교 함수
+    return *(int*)a - *(int*)b;
+}
+
+int binary_search(int n, int value) { // 이진 탐색 함수
+    int left = 0, right = n-1, mid;
+    while (left <= right) {
+        mid = (left+right)/2;
+        if (num[mid] == value) { // 찾으려는 값이 배열 내에 존재하면 1 반환
+            return 1;
+        } else if (num[mid] < value) { // 찾으려는 값이 중간 위치보다 크다면 오른쪽 탐색
+            left = mid+1;
+        } else { // 찾으려는 값이 중간 위치보다 작다면 왼쪽 탐색
+            right = mid-1;
+        }
+    }
+    return 0; // 찾으려는 값이 없으면 0 반환
+}
+
+int main() {
+    int n, m, value;
+    scanf(""%d"", &n);
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &num[i]);
+    }
+    scanf(""%d"", &m);
+    qsort(num, n, sizeof(int), cmp); // 먼저 배열을 정렬함
+    for (int i = 0; i < m; i++) {
+        scanf(""%d"", &value);
+        printf(""%d "", binary_search(n, value)); // 각 값에 대해 이진 탐색 실행하면서 출력
+    }
+    printf(""\n"");
+    return 0;
+}"
+69,14,집합과 맵,5,숫자 카드 2,10816,"숫자 카드는 정수 하나가 적혀져 있는 카드이다. 상근이는 숫자 카드 N개를 가지고 있다. 정수 M개가 주어졌을 때, 이 수가 적혀있는 숫자 카드를 상근이가 몇 개 가지고 있는지 구하는 프로그램을 작성하시오.","첫째 줄에 상근이가 가지고 있는 숫자 카드의 개수 N(1 ≤ N ≤ 500,000)이 주어진다. 둘째 줄에는 숫자 카드에 적혀있는 정수가 주어진다. 숫자 카드에 적혀있는 수는 -10,000,000보다 크거나 같고, 10,000,000보다 작거나 같다.","첫째 줄에 입력으로 주어진 M개의 수에 대해서, 각 수가 적힌 숫자 카드를 상근이가 몇 개 가지고 있는지를 공백으로 구분해 출력한다.","[['10\n6 3 2 10 10 10 -10 -10 7 3\n8\n10 9 -5 2 3 4 5 -10', '3 0 0 1 2 0 0 2']]","#include <stdio.h>
+#include <stdlib.h>
+
+int main() {
+    int n, m, i, num;
+    scanf(""%d"", &n);
+    int* arr = (int*) malloc(n * sizeof(int)); // 동적 메모리 할당
+    for (i = 0; i < n; i++) {
+        scanf(""%d"", &arr[i]);
+    }
+    scanf(""%d"", &m);
+    int* cnt = (int*) calloc(20000001, sizeof(int)); // 동적 메모리 할당 및 초기화
+    for (i = 0; i < n; i++) {
+        cnt[arr[i] + 10000000]++; // 배열 요소 값이 음수가 되지 않도록 +10000000
+    }
+    for (i = 0; i < m; i++) {
+        scanf(""%d"", &num);
+        printf(""%d "", cnt[num + 10000000]); // 배열 요소 값이 음수가 되지 않도록 +10000000
+    }
+    free(arr); // 동적 메모리 해제
+    free(cnt); // 동적 메모리 해제
+    return 0;
+}"
+70,14,집합과 맵,7,대칭 차집합,1269,"자연수를 원소로 갖는 공집합이 아닌 두 집합 A와 B가 있다. 이때, 두 집합의 대칭 차집합의 원소의 개수를 출력하는 프로그램을 작성하시오. 두 집합 A와 B가 있을 때, (A-B)와 (B-A)의 합집합을 A와 B의 대칭 차집합이라고 한다.","첫째 줄에 집합 A의 원소의 개수와 집합 B의 원소의 개수가 빈 칸을 사이에 두고 주어진다. 둘째 줄에는 집합 A의 모든 원소가, 셋째 줄에는 집합 B의 모든 원소가 빈 칸을 사이에 두고 각각 주어진다. 각 집합의 원소의 개수는 200,000을 넘지 않으며, 모든 원소의 값은 100,000,000을 넘지 않는다.",첫째 줄에 대칭 차집합의 원소의 개수를 출력한다.,"[['3 5\n1 2 4\n2 3 4 5 6', '4']]","#include <stdio.h>
+#include <stdlib.h>
+
+int cmp(const void *a, const void *b) {
+    return *(int*)a - *(int*)b;
+}
+
+int main() {
+    int n, m;
+    scanf(""%d %d"", &n, &m);
+    int a[n], b[m];
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &a[i]);
+    }
+    for (int i = 0; i < m; i++) {
+        scanf(""%d"", &b[i]);
+    }
+    qsort(a, n, sizeof(int), cmp);
+    qsort(b, m, sizeof(int), cmp);
+    int cnt = 0;
+    int i = 0, j = 0;
+    while (i < n && j < m) {
+        if (a[i] == b[j]) {
+            i++;
+            j++;
+        }
+        else if (a[i] > b[j]) {
+            j++;
+            cnt++;
+        }
+        else {
+            i++;
+            cnt++;
+        }
+    }
+    cnt += n - i + m - j; // 남은 숫자들이 대칭 차집합 원소임
+    printf(""%d"", cnt);
+    return 0;
+}"
+71,15,"약수, 배수와 소수 2",1,최소공배수,1934,"두 자연수 A와 B에 대해서, A의 배수이면서 B의 배수인 자연수를 A와 B의 공배수라고 한다. 이런 공배수 중에서 가장 작은 수를 최소공배수라고 한다. 예를 들어, 6과 15의 공배수는 30, 60, 90등이 있으며, 최소 공배수는 30이다.","첫째 줄에 테스트 케이스의 개수 T(1 ≤ T ≤ 1,000)가 주어진다. 둘째 줄부터 T개의 줄에 걸쳐서 A와 B가 주어진다. (1 ≤ A, B ≤ 45,000)",첫째 줄부터 T개의 줄에 A와 B의 최소공배수를 입력받은 순서대로 한 줄에 하나씩 출력한다.,"[['3\n1 45000\n6 10\n13 17', '45000\n30\n221']]","#include <stdio.h>
+
+int gcd(int a, int b) { // 최대공약수 함수
+    if (a % b == 0) {
+        return b;
+    }
+    return gcd(b, a % b);
+}
+
+int lcm(int a, int b) { // 최소공배수 함수
+    return a * b / gcd(a, b);
+}
+
+int main() {
+    int T;
+    scanf(""%d"", &T);
+
+    for (int i = 0; i < T; i++) {
+        int A, B;
+        scanf(""%d %d"", &A, &B);
+        printf(""%d\n"", lcm(A, B));
+    }
+
+    return 0;
+}"
+72,15,"약수, 배수와 소수 2",3,분수 합,1735,"분수 A/B는 분자가 A, 분모가 B인 분수를 의미한다. A와 B는 모두 자연수라고 하자.","첫째 줄과 둘째 줄에, 각 분수의 분자와 분모를 뜻하는 두 개의 자연수가 순서대로 주어진다. 입력되는 네 자연수는 모두 30,000 이하이다.",첫째 줄에 구하고자 하는 기약분수의 분자와 분모를 뜻하는 두 개의 자연수를 빈 칸을 사이에 두고 순서대로 출력한다.,"[['2 7\n3 5', '31 35']]","#include <stdio.h>
+
+int gcd(int a, int b) { // 최대공약수
+    while (b != 0) {
+        int r = a % b;
+        a = b;
+        b = r;
+    }
+    return a;
+}
+
+int main() {
+    int a1, b1, a2, b2;
+    scanf(""%d %d %d %d"", &a1, &b1, &a2, &b2);
+
+    int numerator = (a1 * b2) + (a2 * b1); // 분자
+    int denominator = b1 * b2; // 분모
+
+    int g = gcd(numerator, denominator); // 최대공약수 구하기
+    numerator /= g;
+    denominator /= g;
+
+    printf(""%d %d"", numerator, denominator);
+    return 0;
+}"
+73,15,"약수, 배수와 소수 2",4,가로수,2485,직선으로 되어있는 도로의 한 편에 가로수가 임의의 간격으로 심어져있다. KOI 시에서는 가로수들이 모두 같은 간격이 되도록 가로수를 추가로 심는 사업을 추진하고 있다. KOI 시에서는 예산문제로 가능한 한 가장 적은 수의 나무를 심고 싶다.,"첫째 줄에는 이미 심어져 있는 가로수의 수를 나타내는 하나의 정수 N이 주어진다(3 ≤ N ≤ 100,000). 둘째 줄부터 N개의 줄에는 각 줄마다 심어져 있는 가로수의 위치가 양의 정수로 주어지며, 가로수의 위치를 나타내는 정수는 1,000,000,000 이하이다. 가로수의 위치를 나타내는 정수는 모두 다르다.",모든 가로수가 같은 간격이 되도록 새로 심어야 하는 가로수의 최소수를 첫 번째 줄에 출력한다.,"[['4\n1\n3\n7\n13', '3'], ['4\n2\n6\n12\n18', '5']]","#include <stdio.h>
+#include <algorithm>
+
+using namespace std;
+
+int gcd(int a, int b) { // 최대공약수 구하는 함수
+    return b == 0 ? a : gcd(b, a % b);
+}
+
+int arr[100001];
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    for (int i = 0; i < n; i++) {
+        scanf(""%d"", &arr[i]);
+    }
+
+    int diff[100001];
+    for (int i = 1; i < n; i++) {
+        diff[i - 1] = arr[i] - arr[i - 1];
+    }
+
+    int g = gcd(diff[0], diff[1]); // 처음 두 가로수 간격의 최대공약수 구하기
+    for (int i = 2; i < n - 1; i++) {
+        g = gcd(g, diff[i]); // 각 가로수 간격의 최대공약수 구하기
+    }
+
+    int count = 0;
+    for (int i = 0; i < n - 1; i++) {
+        int d = arr[i + 1] - arr[i]; // 현재 가로수와 다음 가로수 간격
+        if (d > g) { // 현재 가로수와 다음 가로수 사이에 새로운 가로수를 심어야 하는 경우
+            count += (d - 1) / g; // 새로 심을 가로수의 수 계산
+        }
+    }
+
+    printf(""%d\n"", count);
+
+    return 0;
+}"
+74,15,"약수, 배수와 소수 2",6,소수 구하기,1929,M이상 N이하의 소수를 모두 출력하는 프로그램을 작성하시오.,"첫째 줄에 자연수 M과 N이 빈 칸을 사이에 두고 주어진다. (1 ≤ M ≤ N ≤ 1,000,000) M이상 N이하의 소수가 하나 이상 있는 입력만 주어진다.","한 줄에 하나씩, 증가하는 순서대로 소수를 출력한다.","[['3 16', '3\n5\n7\n11\n13']]","#include <stdio.h>
+
+int main() {
+    int m, n;
+    scanf(""%d %d"", &m, &n);
+
+    // 에라토스테네스의 체 알고리즘을 이용하여 소수를 구함
+    int arr[1000001] = {0,}; // 1~1000000사이의 숫자들이 소수인지 아닌지를 판별하는 배열
+    for(int i=2; i<=n; i++) {
+        if(arr[i] == 0) { // 아직 소수가 아니라고 판별되지 않았다면
+            if(i >= m) printf(""%d\n"", i); // M 이상의 소수이면 출력
+            for(int j=i*2; j<=n; j+=i) { // i의 배수인 숫자들은 소수가 아님
+                arr[j] = 1;
+            }
+        }
+    }
+
+    return 0;
+}"
+75,15,"약수, 배수와 소수 2",7,베르트랑 공준,4948,"베르트랑 공준은 임의의 자연수 n에 대하여, n보다 크고, 2n보다 작거나 같은 소수는 적어도 하나 존재한다는 내용을 담고 있다.",입력은 여러 개의 테스트 케이스로 이루어져 있다. 각 케이스는 n을 포함하는 한 줄로 이루어져 있다.,"각 테스트 케이스에 대해서, n보다 크고, 2n보다 작거나 같은 소수의 개수를 출력한다.","[['1\n10\n13\n100\n1000\n10000\n100000\n0', '1\n4\n3\n21\n135\n1033\n8392']]","#include <stdio.h>
+#define MAX_N 123456
+
+int prime[MAX_N * 2 + 1] = {0,}; // 에라토스테네스의 체를 이용해서 소수를 구하기 위한 배열
+
+void find_prime() {
+    prime[0] = prime[1] = 1; // 0, 1은 소수가 아님
+    for (int i = 2; i <= MAX_N * 2; i++) {
+        if (prime[i] == 0) { // 아직 소수가 아니라고 판별되지 않았다면
+            for (int j = i + i; j <= MAX_N * 2; j += i) { // i의 배수인 숫자들은 소수가 아님
+                prime[j] = 1;
+            }
+        }
+    }
+}
+
+int count_prime(int n) { // n보다 크고, 2n보다 작거나 같은 소수의 개수 반환
+    int cnt = 0;
+    for (int i = n + 1; i <= n * 2; i++) {
+        if (prime[i] == 0) cnt++;
+    }
+    return cnt;
+}
+
+int main() {
+    find_prime(); // 소수 구하기
+    while (1) {
+        int n;
+        scanf(""%d"", &n);
+        if (n == 0) break; // 입력이 0이면 종료
+        printf(""%d\n"", count_prime(n)); // n보다 크고, 2n보다 작거나 같은 소수의 개수 출력
+    }
+
+    return 0;
+}"
+76,15,"약수, 배수와 소수 2",8,골드바흐 파티션,17103,"짝수 N을 두 소수의 합으로 나타내는 표현을 골드바흐 파티션이라고 한다. 짝수 N이 주어졌을 때, 골드바흐 파티션의 개수를 구해보자. 두 소수의 순서만 다른 것은 같은 파티션이다.","첫째 줄에 테스트 케이스의 개수 T (1 ≤ T ≤ 100)가 주어진다. 각 테스트 케이스는 한 줄로 이루어져 있고, 정수 N은 짝수이고, 2 < N ≤ 1,000,000을 만족한다.",각각의 테스트 케이스마다 골드바흐 파티션의 수를 출력한다.,"[['5\n6\n8\n10\n12\n100', '1\n1\n2\n1\n6']]","#include <stdio.h>
+#define MAX 1000000
+
+int is_prime[MAX+1]; // 소수 판별을 저장할 배열
+
+// 에라토스테네스의 체 알고리즘으로 소수 판별 배열 만들기
+void eratosthenes() {
+    is_prime[0] = is_prime[1] = 1; // 0과 1은 소수가 아님
+    for (int i = 2; i * i <= MAX; i++) {
+        if (is_prime[i] == 0) { // 소수인 경우
+            for (int j = i * i; j <= MAX; j += i) {
+                is_prime[j] = 1; // i의 배수는 소수가 아님
+            }
+        }
+    }
+}
+
+int main() {
+    eratosthenes();
+
+    int T;
+    scanf(""%d"", &T);
+
+    while (T--) {
+        int N;
+        scanf(""%d"", &N);
+
+        int count = 0; // 골드바흐 파티션 수
+        for (int i = 2; i <= N/2; i++) { // i는 2부터 N/2까지
+            if (is_prime[i] == 0 && is_prime[N-i] == 0) { // i와 N-i가 모두 소수인 경우
+                count++;
+            }
+        }
+
+        printf(""%d\n"", count);
+    }
+
+    return 0;
+}"
+77,15,"약수, 배수와 소수 2",9,창문 닫기,13909,"서강대학교 컴퓨터공학과 실습실 R912호에는 현재 N개의 창문이 있고 또 N명의 사람이 있다. 1번째 사람은 1의 배수 번째 창문을 열려 있으면 닫고 닫혀 있으면 연다.  2번째 사람은 2의 배수 번째 창문을 열려 있으면 닫고 닫혀 있으면 연다. 이러한 행동을 N번째 사람까지 진행한 후 열려 있는 창문의 개수를 구하라. 단, 처음에 모든 창문은 닫혀 있다.","첫 번째 줄에는 창문의 개수와 사람의 수 N(1 ≤ N ≤ 2,100,000,000)이 주어진다.",마지막에 열려 있는 창문의 개수를 출력한다.,"[['3', '1'], ['24', '4']]","#include <stdio.h>
+#include <math.h>
+
+int main() {
+    int n;
+    scanf(""%d"", &n);
+
+    int sqrtn = sqrt(n); // n의 제곱근 구하기
+
+    printf(""%d"", sqrtn); // 제곱근 값이 열려있는 창문 개수
+
+    return 0;
+}"
