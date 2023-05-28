@@ -1,0 +1,9 @@
+<p>
+    Submit yout C code in textarea
+</p>
+<form method="post" action="{% url 'rating_code' %}">
+    {% csrf_token %}
+    <textarea name="code" rows="10" cols="50"></textarea>
+    <br>
+    <input type="submit" value="Evaluate your code">
+</form>
