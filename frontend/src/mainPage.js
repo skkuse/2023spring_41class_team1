@@ -68,11 +68,10 @@ const LoginFormBtn = styled.button`
   cursor: pointer;
   border-radius: 8px;
 `;
-const LoginText = styled.span`
-  color: green;
-  font-size: 16px;
-`;
+
+//첫 페이지
 function MainPage() {
+  //페이지 이동
     const navigate = useNavigate();
 
     const navigateToLogin = () => {
@@ -84,16 +83,7 @@ function MainPage() {
     const navigateToMain = () => {
         navigate("/");
     };
-
-    const [form, setForm] = useState({ id: "", password: "" });
-    const Login = (e) => {
-        e.preventDefault();
-        console.log(form);
-    };
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setForm({ ...form, [name]: value });
-    };
+    
     return (
         <div className="App">
         <header className="App-header">
@@ -104,11 +94,10 @@ function MainPage() {
             </TitleContainer>
             <Container>
             <LoginContainer>
-                <LoginForm onSubmit={Login}>
+                <LoginForm>
                 <LoginFormBtn onClick={navigateToLogin}>로그인</LoginFormBtn>
                 <LoginFormBtn onClick={navigateToRegister}>회원가입</LoginFormBtn>
                 </LoginForm>
-                <LoginText>{/* <Link to="/signup">회원가입</Link> */}</LoginText>
             </LoginContainer>
             </Container>
         </header>
