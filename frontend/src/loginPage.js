@@ -4,6 +4,7 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
+
 const BottomContainer = styled.span`
   width: 100%;
   height: 500px;  
@@ -11,18 +12,18 @@ const BottomContainer = styled.span`
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  
 `;
-const RegisterContainer = styled.div`
+const LoginContainer = styled.div`
   width: 560px;
-  height: 500px;
+  height: 430px;
   margin-right: 50px;
+  border-radius: 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 `;
-const RegisterTitle = styled.h1`
+const LoginTitle = styled.h1`
   width: 100%;
   height: 10%;
   text-align: center;
@@ -78,13 +79,13 @@ const BannerRegisterBtn = styled.h6`
 `;
 const LoginForm = styled.form`
   width: 100%;
-  height: 100%;
+  height: 90%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 `;
-const RegisterFormInput = styled.input`
+const LoginFormInput = styled.input`
   display: block;
   width: 60%;
   height: 50px;
@@ -92,10 +93,21 @@ const RegisterFormInput = styled.input`
   border-radius: 8px;
   font-family: "Jamsil";
 `;
+const LoginFormBtn = styled.button`
+  width: 40%;
+  height: 40px;
+  margin-top: 40px;
+  background-color: #ece759;
+  color: #3c578d;
+  font-size: 20px;
+  font-family: "Jamsil";
+  cursor: pointer;
+  border-radius: 8px;
+`;
 const RegisterFormBtn = styled.button`
   width: 40%;
   height: 40px;
-  margin-top: 5%;
+  margin-top: 10px;
   background-color: #ece759;
   color: #3c578d;
   font-size: 20px;
@@ -104,33 +116,49 @@ const RegisterFormBtn = styled.button`
   border-radius: 8px;
 `;
 
-function Register() {
-  const navigate = useNavigate();
 
+//로그인 기능
+function Login() {
+  //페이지 이동
+  const navigate = useNavigate();
   const navigateToLogin = () => {
-      navigate("/Login");
+    navigate("/Login");
   };
+
   const navigateToRegister = () => {
-    navigate("/Register");
+      navigate("/Register");
   };
+
   const navigateToMain = () => {
     navigate("/");
   };
 
-  const [form, setForm] = useState({ 
-    id: "", 
-    password: "",
-    paswordConfig: "",
-    nickname: ""
-   });
-  const Register = (e) => {
+  const navigateToLevels = () => {
+    navigate("/Levels");
+  };
+
+
+  //로그인 형식
+  const [form, setForm] = useState({ id: "", password: "" });
+
+  //정보 백엔드로 보내기
+  const handleLogin = (e) => {
     e.preventDefault();
     console.log(form);
+    alert('정보 백엔드로 보내기');
   };
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setForm({ ...form, [name]: value });}
+
+  
+    //onclick 실행 시 작동해야 하는 것들
+  const onClickExecute = (e) => {
+      navigateToLevels();
+      handleLogin(e);
   };
+  
   return (
     <div className="App">
       <header className="App-header">
@@ -141,11 +169,11 @@ function Register() {
           <BannerLoginBtn onClick={navigateToLogin}>Log In</BannerLoginBtn>
         </BannerContainer>
         <BottomContainer>
-          <img src={coder} className="App-logo" alt="coder"/>
-          <RegisterContainer>
-            <RegisterTitle>Sign up</RegisterTitle>
-            <LoginForm onSubmit={Register}>
-              <RegisterFormInput
+          <img src={coder} className="App-logo" alt="coder" />
+          <LoginContainer>
+            <LoginTitle>Login</LoginTitle>
+            <LoginForm>
+              <LoginFormInput
                 type="text"
                 id="id"
                 name="id"
@@ -153,7 +181,7 @@ function Register() {
                 onChange={handleChange}
                 placeholder="     아이디"
               />
-              <RegisterFormInput
+              <LoginFormInput
                 type="password"
                 id="password"
                 name="password"
@@ -161,29 +189,14 @@ function Register() {
                 onChange={handleChange}
                 placeholder="     비밀번호"
               />
-              <RegisterFormInput
-                type="password"
-                id="passwordConfig"
-                name="passwordConfig"
-                value={form.passwordConfig}
-                onChange={handleChange}
-                placeholder="     비밀번호  확인"
-              />
-              <RegisterFormInput
-                type="text"
-                id="nickname"
-                name="nickname"
-                value={form.nickname}
-                onChange={handleChange}
-                placeholder="     별명"
-              />
-              <RegisterFormBtn>회원가입</RegisterFormBtn>
+              <LoginFormBtn onClick={onClickExecute}>로그인</LoginFormBtn>
+              <RegisterFormBtn onClick={navigateToRegister}>회원가입</RegisterFormBtn>
             </LoginForm>
-          </RegisterContainer>
+          </LoginContainer>
         </BottomContainer>
     </header>
     </div>
   );
 }
 
-export default Register;
+export default Login;

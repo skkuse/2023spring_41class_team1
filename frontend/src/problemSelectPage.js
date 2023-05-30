@@ -1,6 +1,6 @@
 import './App.css';
 import styled from "styled-components";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import dummy from './dummyData.json';
 
@@ -118,9 +118,14 @@ const ProblemFormBtn = styled.button`
   }
 `;
 
-
+//문제 페이지
 function Problems() {
+  //페이지 이동
   const navigate = useNavigate();
+
+  const navigateToMain = () => {
+    navigate("/");
+  };
 
   const navigateToLogin = () => {
       navigate("/Login");
@@ -131,22 +136,22 @@ function Problems() {
   };
 
   const [form, setForm] = useState();
+  const [currentUserNickname, setCurrentUserNickname] = useState('');
 
+  /*
   const handleClick = (e) => {
     const { level } = e.target;
     setForm(level);
-  };
+  };*/
 
-  const Login = (e) => {
-    e.preventDefault();
-    console.log(form);
-  };
-
+  //url 매개변수 추출
   const { levels } = useParams();
   
+  //levels값과 일치하는 문제들을 필터링
   const levelList = dummy.problems.filter(level => 
     level.level === levels);
     
+  //문제 색상 설명란
   const Explain = {data:[
     {color:"yellow", state:"unseen"},
     {color:"red", state:"seen"},
@@ -154,25 +159,47 @@ function Problems() {
   };
 
 
+  //에디터로 이동
   function gotoEditor(){
     navigate('/EditorPage');
   }
+
+  //정보 백엔드로 보낸 후 에디터 페이지로 이동
+  const handleProblem = (e, number) => {
+    e.preventDefault();
+    console.log(number);
+  };
+
   
+    //onclick 실행 시 작동해야 하는 것들
+  const onClickExecute = (e, number) => {
+      gotoEditor();
+      handleProblem(e, number);
+  };
+
+  //현재 사용자의 닉네임 설정
+  useEffect(() => {
+    setCurrentUserNickname(dummy.users[0].nickname);
+  }, []);
+
+  //토글이 안될 것 같아서 일단 주석
+  /*
   let [read, setRead] = useState("");
 
   const toggleActive = (e) => {
     setRead((prev) => {
       return e.target.value;
     });
-  };
+  };*/
+  
 
   return (
     <div className="App">
       <header className='App-header'>
         <BannerContainer>
-          <BannerTitle>⚡F-Killer</BannerTitle>
+          <BannerTitle onClick={navigateToMain}>⚡F-Killer</BannerTitle>
           <BannerSubTitle>온라인 디버깅 교육 플랫폼</BannerSubTitle>
-          <BannerLogoutBtn onClick={navigateToLogin}>Jack &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;  Log Out</BannerLogoutBtn>
+          <BannerLogoutBtn onClick={navigateToLogin}>{currentUserNickname} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;  Log Out</BannerLogoutBtn>
           <BannerLevelBtn onClick={navigateToLevels}> Levels </BannerLevelBtn>
         </BannerContainer>
         <BottomContainer>
@@ -188,13 +215,11 @@ function Problems() {
             <ProblemFormBtn 
               level={level.level} 
               key={level.id} 
-              onClick={toggleActive}
-              className={(level.accuray === 100 ? "correct" : "") || (level.seen === true ? "seen" : "")}>
+              onClick={(e) => onClickExecute(e, level.number)}
+              className={(level.accuracy === 100 ? "correct" : "") || (level.seen === true ? "seen" : "")}>
               {level.level} - {level.number}</ProblemFormBtn>
             ))}
-            {levelList.map(problems => (
-                <ProblemFormBtn onClick={gotoEditor} key={problems.id}>{problems.level} - {problems.number}</ProblemFormBtn>
-                ))}
+            
           </ProblemContainer>
         </BottomContainer>
     </header>

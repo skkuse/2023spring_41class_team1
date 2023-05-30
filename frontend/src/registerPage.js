@@ -4,6 +4,8 @@ import styled from "styled-components";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 
+
+//디자인
 const BottomContainer = styled.span`
   width: 100%;
   height: 500px;  
@@ -76,7 +78,7 @@ const BannerRegisterBtn = styled.h6`
   margin-left: 5%;
   margin-top: 7%;
 `;
-const LoginForm = styled.form`
+const RegisterForm = styled.form`
   width: 100%;
   height: 100%;
   display: flex;
@@ -104,7 +106,9 @@ const RegisterFormBtn = styled.button`
   border-radius: 8px;
 `;
 
+//회원가입 기능
 function Register() {
+  //페이지 이동
   const navigate = useNavigate();
 
   const navigateToLogin = () => {
@@ -117,20 +121,32 @@ function Register() {
     navigate("/");
   };
 
+  //회원가입 형식
   const [form, setForm] = useState({ 
     id: "", 
     password: "",
-    paswordConfig: "",
+    passwordConfig: "",
     nickname: ""
    });
-  const Login = (e) => {
+
+   //정보 백엔드로 보내기
+   const handleRegister = (e) => {
     e.preventDefault();
     console.log(form);
+    alert('정보 백엔드로 보내기');
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
   };
+  //onclick 실행 시 동작해야 하는 것들
+  const onClickExecute = (e) => {
+    navigateToLogin();
+    handleRegister(e);
+  };
+
+  //banner: 상단 배너
+  //container: 구조 디자인
   return (
     <div className="App">
       <header className="App-header">
@@ -144,7 +160,7 @@ function Register() {
           <img src={coder} className="App-logo" alt="coder"/>
           <RegisterContainer>
             <RegisterTitle>Sign up</RegisterTitle>
-            <LoginForm onSubmit={Login}>
+            <RegisterForm>
               <RegisterFormInput
                 type="text"
                 id="id"
@@ -177,8 +193,8 @@ function Register() {
                 onChange={handleChange}
                 placeholder="     별명"
               />
-              <RegisterFormBtn>회원가입</RegisterFormBtn>
-            </LoginForm>
+              <RegisterFormBtn onClick={onClickExecute}>회원가입</RegisterFormBtn>
+            </RegisterForm>
           </RegisterContainer>
         </BottomContainer>
     </header>

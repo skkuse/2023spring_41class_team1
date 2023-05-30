@@ -1,7 +1,7 @@
 import './App.css';
 import styled from "styled-components";
-import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import dummy from './dummyData.json';
 
 
@@ -90,7 +90,7 @@ const LevelFormBtn = styled.button`
 `;
 
 
-
+//레벨 페이지
 function Levels() {
   /*
   const { pathname } = useLocation();
@@ -113,6 +113,7 @@ function Levels() {
     }
   );*/
 
+  //페이지 이동
   const navigate = useNavigate();
   
   const navigateToLogin = () => {
@@ -123,18 +124,20 @@ function Levels() {
     navigate("/");
   };
 
-  
-  const [form, setForm] = useState();
+  const [currentUserNickname, setCurrentUserNickname] = useState('');
 
-  /*const handleClick = (e) => {
-    const { level } = e.target;
-    setForm(level);
-  };*/
-
-  const Level = (e) => {
+  //정보 백엔드로 보낸 후 problem 페이지로 이동
+  const handleLevel = (e, level) => {
     e.preventDefault();
-    console.log(form);
+    console.log(level);
+    navigate(`/Problems/${level}`);
   };
+
+  //현재 사용자의 닉네임을 설정
+  useEffect(() => {
+    setCurrentUserNickname(dummy.users[0].nickname);
+  }, []);
+
 
   return (
     <div className="App">
@@ -142,16 +145,19 @@ function Levels() {
         <BannerContainer>
           <BannerTitle onClick={navigateToMain}>⚡F-Killer</BannerTitle>
           <BannerSubTitle>온라인 디버깅 교육 플랫폼</BannerSubTitle>
-          <BannerLogoutBtn onClick={navigateToLogin}>Jack &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;  Log Out</BannerLogoutBtn>
+          <BannerLogoutBtn onClick={navigateToLogin}>{currentUserNickname} &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;  Log Out</BannerLogoutBtn>
         </BannerContainer>
         <BottomContainer>
           <LevelContainer>
             <LevelTitle>Level</LevelTitle>
-            <LevelForm onSubmit={Level}>
+            <LevelForm>
               {dummy.levels.map(levels => (
-                <Link to={`/Problems/${levels.level}`} >
-                  <LevelFormBtn key={levels.id}>{levels.level}</LevelFormBtn>
-                </Link>
+                <LevelFormBtn
+                key={levels.id}
+                onClick={(e) => handleLevel(e, levels.level)}
+              >
+                {levels.level}
+              </LevelFormBtn>
               ))}
             </LevelForm>
           </LevelContainer>
