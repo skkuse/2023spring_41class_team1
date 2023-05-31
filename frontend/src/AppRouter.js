@@ -18,11 +18,11 @@ function AppRouter() {
   return (
     <BrowserRouter>
         <Routes>
-          <Route path='/' element={<MainPage />}></Route>
+        <Route path='/' element={<MainPage />}></Route>
           <Route path='/Login' element={<Login />}></Route>
           <Route path='/Register' element={<Register />}></Route>
           <Route path='/Levels' element={<Levels />}></Route>
-          <Route path='/Problems' element={<Problems />}></Route>
+          <Route path='/Problems/:levels' element={<Problems />}></Route>
           <Route style={tempStyle} path="/EditorPage" element={<EditorPage />} />
           <Route style={tempStyle} path="/resultView" element={<ViewResult />} />
 
