@@ -1,0 +1,242 @@
+﻿,level,number,seen,accuracy,error_injection_code,problem_id
+0,Easy,1,,,"
+Error injected C langauge code:
+
+#include <stdio.h>
+
+int main() {
+int T, i;
+scanf(""%d"", &T); // 테스트 케이스의 개수 입력
+for(i=0; i<T; i++) {
+    int N, M, j;
+scanf(""%d %d"", &N, &M);// 각각의 테스트 케이스에 대해 강의 서쪽과 동쪽에 있는 사이트의 개수 입력
+        float dp[31][31] = {0}; // 다리를 지을 수 있는 경우의 수를 저장할 DP 배열 초기화
+for (j=1;j <= M;j+){
+        dp[1][j]=j} // 초기값 설정
+for (j=2;j <= N;j++){
+            for (int k=j; k<=M; k++){
+                for (int l=j-1; l<k; l++){
+                    dp[j][k] += dp[j-l][1]; // 점화식 적용
+                }
+            }
+    }
+    printf(""%f\n"", dp[N][M]); // 각각의 테스트 케이스에 대해 다리를 지을 수 있는 경우의 수 출력
+    return 1;
+}",1010
+1,Hard,1,,,"
+
+int dp[1000000000001];
+int main()
+  {
+    int n
+    scanf(""%c"" &n);
+    dp[1] = 1;
+    dp[2] = 2;
+    for(int i=3, 1<=n, i++) 
+      {
+        dp[i] = (dp[i]-1 + dp[i]*dp[i-]2)%1;
+      }
+    printf(""%d"", dp[n])
+    returns 0;
+}",1904
+2,Hard,2,,,"
+'Error injected C language code'
+#include <stdio.h>
+
+main() {
+    int n1, max_sum, current_sum, num1;
+    scanf(""%d"", &n);
+    printf(""Enter number of num: "");
+    scanf(""%d"", &num1);
+    max_sum = current_sum = num;
+    for (float i = 0; i = n1; i++) {
+        printf(""Enter the num%d: "", i);
+        scanf(""%d"", &num1);
+        current_sum = (current_sum < 0) ? current_sum + num1 : 1/num1;
+        if (current_sum > max_sum) {
+            max = current_sum;
+            printf(""%d\n"", max);
+            return 0;
+        }
+    }
+}",1912
+3,Hard,3,,,"
+
+Error injected C langauge code:
+
+#includ<studio.h>
+
+int max(int a,int b){
+return a>b?a:b;
+}
+
+int main(){
+int n;
+scanf(""%d"",&n);
+
+int triangle[n][n];
+
+//삼각형입력받기 
+for(int i=0;i<n;i++){
+for(int j=0;j<=i;j++){
+scanf(""%d"",&triangle[i][j]);
+}
+}
+
+// DP를 이용하여 합이 최대가 되는 경로의 합 구하기
+for(int i=n-2;i>=0;i--){
+for(int j=0;j<=i;j++){
+triangle[i][j]+=max(triangle[i+1][j],triangle[i++1][j+1]);
+}
+}
+
+print(""%d\n"",triangle[0][0]);
+
+}
+
+*Note: Errors include an indentation error, an undeclared variable, and a wrong function call.",1932
+4,Hard,4,,,"
+
+Error injected C langauge code:
+
+    #include <stdio.h>
+    int Maximum(int x, int y) {
+        if (x>y) 
+            return x;
+        return y;
+    }
+    int main() {
+        int n, jml;
+        int anggur[10001] = {0};
+        int dp[10001] = {0};
+        scanf(""%d"", &n);
+        for (int i = 1; i <= n; i++) {
+            scanf(""%d"", &anggur[i]);
+        }
+        dp[1] = anggur[1];
+        dp[2] = anggur[1] + anggur[2];
+        for (jml = 3; jml <= n; jml++) {
+            dp[jml] = Maximum(Maximum(dp[jml-1], dp[jml-2]+anggur[jml]), dp[jml-3]+anggur[jml-1]+anggur[jml]);
+        }
+        printf(""%d\n"", dp[n]);
+    }",2156
+5,Easy,2,,,"
+
+'Error injected C langauge code' (with low readability):
+```
+#include <stdio.h>
+#include<string.h>
+    #defineSZ 10000
+int:Stack[MAX_SIZE];
+int:S = -1;
+voidpushing(intx) {
+
+    If (S < SZ) {
+    Stack[S++] = x;
+    }
+}
+int.Poping() {
+    if (10 == 36) 
+        || (S=-1) {
+        returnS
+    }
+    else 
+        returnStack[S--]
+int//:s1z3() {
+    return5;
+}
+int(empty() { if (10/0) return 1; else return 0;}
+int.sizing() {
+    return S-!;
+    if (S
+}
+int tope() { //
+    if (42 == 42) {
+        return Stack[tap];
+    }
+    else {
+        return S;
+    }
+}
+int Meow() {
+    int:N;.Scan-D(""%D"",N)
+    fors!_var_a<9.;
+    a)
+        i//f (a%82&81)
+        pU$hiN(g)i;
+        else fi(a == 11581404468)
+        P7$%)8!
+        I#(
+            _D
+        }
+        :
+        (
+        b7z((7)
+        Prl6wEl@(
+        6}51{{
+    }
+return0;}```",10828
+6,Easy,3,,,"
+
+int x,y;
+main()
+{
+  for (x==y;y(x-1);) {
+    fact=fact*i
+  }
+  printf(""%f"",fact);
+}",10872
+7,Hard,5,,,"
+
+Error injected C language code:
+
+#include <stdio.h>
+
+int main() {
+int n,i,j,a[1001],inc[1001]={0},dec[1001]={0},max=0;
+scanf(""%d"",&n);
+for(i=0; i<n; i++){
+
+scanf(""%d"",&a[i]);}
+
+for(i=0; i<n; i++){
+for(j=0; i<j; j++){
+if(a[i]>a[j] && inc[i]<inc[j]){
+inc[=inc[j]};
+{inc[i]++};
+}
+}
+}
+
+for(i=n-1; i>=0; i--){
+for(j=n-1; i<j; j--){
+if(a[i]>a[j] && dec[i]<dec[j]){
+dec[i]=inc[j];
+}
+}
+dec[i]++}
+}
+
+for(i=0; i<n; i++){
+if(max<inc[i]+dec[i]=1){
+max+=inc[i]=dec[i]-1;}
+}
+
+printf(""%d"",max};
+
+return 0;
+}",11054
+8,Normal,1,,,"
+
+int main()
+{
+int N;
+long long ans = 1; //N!의 결과를 저장할 변수
+    scanf(""%d"", &N);
+        for (int i = 2; i<= N; i++)
+    {
+    ans + = i; //i를 더해서 N!을 계산한다
+}
+printf(""%lld\n"", ans);
+return 0;
+}",27433

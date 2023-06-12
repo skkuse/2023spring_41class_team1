@@ -3,8 +3,7 @@ import './App.css';
 import styled from "styled-components";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
-
+import axios from 'axios';
 //디자인
 const BottomContainer = styled.span`
   width: 100%;
@@ -105,7 +104,9 @@ const RegisterFormBtn = styled.button`
   cursor: pointer;
   border-radius: 8px;
 `;
-
+const api = axios.create({
+  baseURL: 'http://localhost:8000'  // 백엔드 서버의 주소와 포트를 baseURL로 설정
+});
 //회원가입 기능
 function Register() {
   //페이지 이동
@@ -128,12 +129,32 @@ function Register() {
     passwordConfig: "",
     nickname: ""
    });
-
+   
+   const [condition, setCondition] = useState(0);
+  
    //정보 백엔드로 보내기
-   const handleRegister = (e) => {
+   const handleRegister = async(e) => {
     e.preventDefault();
-    console.log(form);
-    alert('정보 백엔드로 보내기');
+    try {
+      const response = await api.post('/api/register/', {
+        username: form.id,
+        password: form.password,
+        password_config: form.passwordConfig,
+      });
+      if (response.data.message === '비밀번호 불일치'){
+        setCondition(0);
+        alert('비밀번호가 불일치합니다.')
+      }
+      else{
+        setCondition(1);
+        alert("회원가입에 성공했습니다.");
+        navigateToLogin();
+      }
+      
+    } catch (error) {
+      setCondition(0);
+      alert("아이디가 중복되었습니다.");
+    }
   };
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -141,7 +162,6 @@ function Register() {
   };
   //onclick 실행 시 동작해야 하는 것들
   const onClickExecute = (e) => {
-    navigateToLogin();
     handleRegister(e);
   };
 
@@ -185,14 +205,7 @@ function Register() {
                 onChange={handleChange}
                 placeholder="     비밀번호  확인"
               />
-              <RegisterFormInput
-                type="text"
-                id="nickname"
-                name="nickname"
-                value={form.nickname}
-                onChange={handleChange}
-                placeholder="     별명"
-              />
+              
               <RegisterFormBtn onClick={onClickExecute}>회원가입</RegisterFormBtn>
             </RegisterForm>
           </RegisterContainer>

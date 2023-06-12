@@ -22,7 +22,9 @@ function AppRouter() {
           <Route path='/Login' element={<Login />}></Route>
           <Route path='/Register' element={<Register />}></Route>
           <Route path='/Levels' element={<Levels />}></Route>
-          <Route path='/Problems' element={<Problems />}></Route>
+          <Route path='/Problems/Easy' element={<Problems />}></Route>
+          <Route path='/Problems/Normal' element={<Problems />}></Route>
+          <Route path='/Problems/Hard' element={<Problems />}></Route>
           <Route style={tempStyle} path="/EditorPage" element={<EditorPage />} />
           <Route style={tempStyle} path="/resultView" element={<ViewResult />} />
 

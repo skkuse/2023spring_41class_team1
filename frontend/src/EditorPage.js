@@ -1,9 +1,10 @@
 import {useState,useRef,useEffect} from 'react'
 import { Editor } from '@monaco-editor/react';
 import "./App.css";
-import { json, useNavigate } from 'react-router-dom';
-import {DUMMY_DATA} from "./constants/DummyData"
+import { json, useNavigate,useLocation } from 'react-router-dom';
+
 import styled from "styled-components";
+import axios from 'axios';
 
 const CusBody = styled.div`
 padding: 0;
@@ -61,18 +62,61 @@ border-right-width: 0px;
 border-left-width: 0px;
 `;
 
-
+const api = axios.create({
+  baseURL: 'http://localhost:8000'  // 백엔드 서버의 주소와 포트를 baseURL로 설정
+});
 
 function EditorPage() {
+  const location = useLocation();
+  const user_id = location.state.id;
+  const levels = location.state.value;
+  const number = location.state.number;
+  const [response, setResponse] = useState('');
+  const [accuracy, setAccuracy] = useState('');
+  const [DUMMY_DATA, setDUMMY_DATA] = useState('');
   const [content,setcontent] = useState(DUMMY_DATA.initial_code);
+  
   const [executionResult, setExecutionResult] = useState('');
   const [check,setCheck] = useState(false);
 
-  const [testcaseState,setTestcaseState] = useState(DUMMY_DATA.testCases);
-
+  const [testcaseState,setTestcaseState] = useState([]);
+  const api = axios.create({
+    baseURL: 'http://localhost:8000'  // 백엔드 서버의 주소와 포트를 baseURL로 설정
+  });
+  const handleProblem = async(e) => {
+    
+    try {
+      
+      const temp=await api.post('/api/problem/', {
+        level: levels,
+        number: number,
+        user_index: user_id,
+    });
+    
+    setDUMMY_DATA(temp.data);
+    
+    }
+    catch (e)
+    {
+      
+    }
+    
+  };
+  useEffect(() => {
+    setcontent(DUMMY_DATA.initial_code);
+    
+    
+  }, [DUMMY_DATA]);
+  useEffect(() => {
+    handleProblem();
+  }, []);
+  
+  const temparray=testcaseState;
+  
+ 
   const [inputValue, setInput] = useState('');
   const [outputValue, setOutput] = useState('');
-
+  
   //page 이동 function
   const movePage = useNavigate();
 
@@ -85,25 +129,50 @@ function EditorPage() {
 
   //reload button
   //사용자가 해당 문제에 대하여 저장하였던 코드를 불러와 Editor에 표시한다.
-  function reload(){
+  
+  async function reload() {
     // reloadCode 에 저장된 코드 text 형태로 저장
     let reloadCode = DUMMY_DATA.initial_code;
-
+    try {
+      const response = await  api.post('/api/reload/', {
+        username: user_id
+      });
+      setResponse(response);
+      
+    } catch (error) {
+      
+    } 
+   
+    reloadCode=response.data;
     //editor에 setValue 로 저장된 text 표시 
     editorRef.current.setValue(reloadCode);
   }
 
   //submit 버튼
   //submit을 하면 자동으로 코드가 저장된다.
-  function submit(){
+  async function submit(){
     //코드 저장
     save();
-
-    //코드 backend에 전송
-    console.log('submit')
-
+    try {
+      const accuracy= await api.post('/api/submit_code/', {
+        user_code: editorRef.current.getValue(),
+        level : levels,
+        number : number,
+        username : user_id
+      });
+      if(accuracy.data.message=="error")
+      {
+        movePage('/resultView', {state : {id : user_id, value : levels, number : number, code : editorRef.current.getValue(), accuracy : 0}});
+      }
+      else
+      {
+        movePage('/resultView', {state : {id : user_id, value : levels, number : number, code : editorRef.current.getValue(), accuracy : accuracy.data.accuracy2}});
+      }  
+    } catch (error) {
+    }
+    
     //result page로 이동
-    movePage('/resultView');
+    
   }
 
   //save button
@@ -114,7 +183,16 @@ function EditorPage() {
     alert('저장되었습니다.');
 
     //코드 백엔드에 보내기
-    console.log(savedCode);
+
+    try {
+      const response =  api.post('/api/save/', {
+        username: user_id,
+        saved_code: savedCode,
+      });
+      
+    } catch (error) {
+      
+    } 
   }
 
   //hint button
@@ -171,8 +249,6 @@ function EditorPage() {
 
     //홈으로 돌아가는 코드 구현
     movePage('/Levels');
-
-    // alert("** 홈으로 돌아가는 함수 구현.");
   }
   const goHome = useConfirm(
     "변경사항을 저장하시겠습니까?",
@@ -180,29 +256,44 @@ function EditorPage() {
     homecancelConfirm
   )
   ///////////////////////////////////////////////////////////
-
-
+  
+  
   //테스트 버튼
   //테스트 케이스마다 
-  function test(){
+  async function test(){
     //현재 코드 백엔드로 보내기
     let savedCode = editorRef.current.getValue();
     let savedTestcase = testcaseState;
-    console.log(savedTestcase);
-
-
-    alert('코드 백엔드로 보내기');
+   
+    
+    try {
+      setResponse( await api.post('/api/user_code_test/', {
+        user_code: editorRef.current.getValue(),
+        testcase: savedTestcase,
+      }));
+    } catch (error) {
+      alert('사용자 데이터 전송실패');
+    }
 
     // 결과 받기
-    let result = DUMMY_DATA.execution_result;
-
+    
+    if(response.data=="error")
+    {
+      setExecutionResult("compile error!");
+    }
+    else
+    {
+      var correctNum = response.data['execution_correct_result']; // 여기에선 결과 받아와야 함
+      var incorrectNum = response.data['execution_incorrect_result']; // 여기도
+      
+      
+      var executeresult = '정답 코드 실행 결과: 테스트 케이스 '+correctNum+'번 정답 & 테스트 케이스 '+incorrectNum+'번 오답';
+      
+      setExecutionResult(executeresult);
+    }
     //실행결과 창에 output 표시
 
-    var correctNum = result;
-    var executeresult = '정답코드로 실행한 결과\n 총 테스트 케이스 중 '+correctNum+'개 정답';
-
-    setExecutionResult(executeresult);
-    // DUMMY_DATA.testCases 의 input 과 output backend에 전달
+   
 
     
   }
@@ -218,9 +309,9 @@ function EditorPage() {
       return;
     }
 
-    console.log(inputValue,outputValue);
+  
     
-    var newValue = {input: inputValue, output: outputValue};
+    var newValue = [inputValue, outputValue];
     
     var temp = testcaseState;
 
@@ -238,19 +329,36 @@ function EditorPage() {
 
   const saveInputValue = event => {
     setInput(event.target.value);
-    // console.log(event.target.value);
+  
   };
 
   const saveOutputValue = event => {
     setOutput(event.target.value);
-    // console.log(event.target.value);
+  
   };
-
+  
   //정답 코드로 테스트 실행
-  function correctTest(){
-    var correctNum = 5;
-    var executeresult = '정답코드로 실행한 결과\n 총 테스트 케이스 중 '+correctNum+'개 정답';
-
+  async function correctTest(){
+    // 결과 받아오기
+    try {
+      setResponse( await api.post('/api/user_testcase_test/', {
+        testcase: testcaseState,
+        level : levels,
+        number : number
+      }));
+    }
+    
+    catch (error) {
+      alert('사용자 데이터 전송실패');
+    }
+    
+    
+    var correctNum = response.data['execution_correct_result']; // 여기에선 결과 받아와야 함
+    var incorrectNum = response.data['execution_incorrect_result']; // 여기도
+    
+    
+    var executeresult = '정답 코드 실행 결과: 테스트 케이스 '+correctNum+'번 정답 & 테스트 케이스 '+incorrectNum+'번 오답';
+    
     setExecutionResult(executeresult);
   }
 
@@ -260,26 +368,9 @@ function EditorPage() {
       localStorage.setItem("testcaseState",JSON.stringify(newTestcaseState));
       return newTestcaseState;
     });
-    console.log(testcaseState);
+    
 
   }
-
-  // useEffect(() => {
-  //   const savedTestcase = localStorage.getItem("testcaseState");
-  //   if(savedTestcase.length > 0){
-  //     setTestcaseState(JSON.parse(savedTestcase));
-  //   }
-  //   else{
-  //     console.log('hello' , DUMMY_DATA.testCases);
-  //     setTestcaseState(DUMMY_DATA.testCases);
-  //   }
-  // })
-
-
-
-  
-
-
 
 
   return (
@@ -327,11 +418,11 @@ function EditorPage() {
               <p>테스테 케이스 {index+1}</p>
               <div>
               <CusButton onClick={()=>handleDelete(index)}>삭제</CusButton>
-              {/* <CusButton onClick={deleteTestcase}>삭제</CusButton> */}
+              
               </div>
               
               </TestCase>
-              <p>입력값 : {testcaseStateDetail.input}       기댓값 : {testcaseStateDetail.output} </p>
+              <p>입력값 : {testcaseStateDetail[0]}       기댓값 : {testcaseStateDetail[1]} </p>
               </div>
             ))}
             <div className='flexSpacearound'>

@@ -1,0 +1,36 @@
+Evaluate Readability of below C langauge code and represent as a integer score.
+
+Maximum score is 100 that it is 100% perfect code aspect of readability. And Minimum score is 0 that it can be interpreted with wrong way person by person. 
+You must represent only Integer score. Do not append any other comment or explanation. For example, "60" just only integer.
+Here is the Test Code for example.
+
+#include<stdio.h>
+
+// Calculating factorial
+int factorialcalculation(int n) {
+if(n == 0)
+    return 1;
+else
+{
+    int fact = 1;
+for(int i = 1; i <= n; i++) {
+fact *= i;
+}
+return fact;
+}
+}
+
+// Main function
+int main() {
+    int n;
+    printf("Enter a number: ");
+    scanf("%d", &n);
+
+if(n < 0)
+printf("Factorial of negative numbers doesn't exist.\n");
+else {
+    int result = factorialcalculation(n);
+    printf("Factorial of %d is %d\n", n, result);
+}
+return 0;
+}

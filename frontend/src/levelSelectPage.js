@@ -92,26 +92,9 @@ const LevelFormBtn = styled.button`
 
 //레벨 페이지
 function Levels() {
-  /*
-  const { pathname } = useLocation();
-  
-  const { data: userCourses } = useQuery(
-    "getUserCourses",
-    () => getUserCourses("nickel"),
-    {
-      onSuccess: (data) => {
-        // Object.entries(data).map(([key, value]) => console.log(key, value));
-      },
-      onError: (error) => {
-        alert(
-          "데이터를 읽어오는 과정에서 문제가 생겼습니다. 프로그램을 다시 실행해주세요."
-        );
-      },
-      // enabled: user.courses.length > 0,
-      refetchOnWindowFocus: false,
-      retry: false,
-    }
-  );*/
+
+  const userid_location = useLocation();
+  const user_id = userid_location.state.id;
 
   //페이지 이동
   const navigate = useNavigate();
@@ -126,16 +109,17 @@ function Levels() {
 
   const [currentUserNickname, setCurrentUserNickname] = useState('');
 
+  
+
   //정보 백엔드로 보낸 후 problem 페이지로 이동
   const handleLevel = (e, level) => {
     e.preventDefault();
-    console.log(level);
-    navigate(`/Problems/${level}`);
+    
+    navigate(`/Problems/${level}`, {state : {id : user_id, value : level}});
   };
-
   //현재 사용자의 닉네임을 설정
   useEffect(() => {
-    setCurrentUserNickname(dummy.users[0].nickname);
+    setCurrentUserNickname(user_id);
   }, []);
 
 

@@ -3,7 +3,7 @@
         {
             "id" : "a",
             "password": 1234,
-            "nickname": "aa"
+            "nickname": "부도현"
         },
         {
             "id" : "b",
@@ -29,63 +29,63 @@
             "level": "Easy",
             "number": 1,
             "seen": true,
-            "accuray": 100
+            "accuracy": 100
         },
         {
             "id": 2,
             "level": "Easy",
             "number": 2,
-            "seen": false,
-            "accuray": 0
+            "seen": true,
+            "accuracy": 0
         },
         {
             "id": 3,
             "level": "Easy",
             "number": 3,
             "seen": true,
-            "accuray": 100
+            "accuracy": 100
         },
         {
             "id": 4,
-            "level": "Normal",
-            "number": 1,
+            "level": "Easy",
+            "number": 4,
             "seen": false,
-            "accuray": 0
+            "accuracy": 0
         },
         {
             "id": 5,
-            "level": "Normal",
-            "number": 2,
-            "seen": true,
-            "accuray": 100
+            "level": "Easy",
+            "number": 5,
+            "seen": false,
+            "accuracy": 0
         },
         {
             "id": 6,
             "level": "Normal",
-            "number": 3,
+            "number": 1,
             "seen": true,
-            "accuray": 50
+            "accuracy": 50
         },
         {
             "id": 7,
-            "level": "Hard",
-            "number": 1,
+            "level": "Normal",
+            "number": 2,
             "seen": false,
-            "accuray": 0
+            "accuracy": 0
         },
         {
             "id": 8,
-            "level": "Hard",
-            "number": 2,
+            "level": "Normal",
+            "number": 3,
             "seen": true,
-            "accuray": 50
+            "accuracy": 50
         },
         {
             "id": 9,
             "level": "Hard",
-            "number": 3,
+            "number": 1,
             "seen": true,
-            "accuray": 100
+            "accuracy": 100
         }
     ]
 }

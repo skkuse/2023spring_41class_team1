@@ -3,8 +3,7 @@ import './App.css';
 import styled from "styled-components";
 import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
-
+import axios from 'axios';
 const BottomContainer = styled.span`
   width: 100%;
   height: 500px;  
@@ -115,7 +114,9 @@ const RegisterFormBtn = styled.button`
   cursor: pointer;
   border-radius: 8px;
 `;
-
+const api = axios.create({
+  baseURL: 'http://localhost:8000'  // 백엔드 서버의 주소와 포트를 baseURL로 설정
+});
 
 //로그인 기능
 function Login() {
@@ -133,19 +134,33 @@ function Login() {
     navigate("/");
   };
 
-  const navigateToLevels = () => {
-    navigate("/Levels");
-  };
+
 
 
   //로그인 형식
   const [form, setForm] = useState({ id: "", password: "" });
 
+  const navigateToLevels = () => {
+    navigate("/Levels", {state : {id : form.id}});
+  };
+
   //정보 백엔드로 보내기
-  const handleLogin = (e) => {
+  const handleLogin = async(e) => {
     e.preventDefault();
-    console.log(form);
-    alert('정보 백엔드로 보내기');
+   
+    try {
+      const response = await api.post('/api/login/', {
+        username: form.id,
+        password: form.password,
+      });
+      
+      alert('로그인에 성공하였습니다.');
+      navigateToLevels();
+    } catch (error) {
+      alert('로그인에 실패했습니다.');
+    } 
+    
+
   };
   
   const handleChange = (e) => {
@@ -155,7 +170,6 @@ function Login() {
   
     //onclick 실행 시 작동해야 하는 것들
   const onClickExecute = (e) => {
-      navigateToLevels();
       handleLogin(e);
   };
   

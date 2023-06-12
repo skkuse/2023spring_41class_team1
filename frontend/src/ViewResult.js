@@ -1,7 +1,9 @@
 // import "./ViewResult.css";
+import {useState, useEffect} from 'react'
 import styled from "styled-components";
 import {DUMMY_DATA} from "./constants/DummyData"
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 const ResultContainer = styled.div`
   color : white;
@@ -45,21 +47,48 @@ color: var(--button-color, #ffffff);
 }
 
 `;
-
 function ViewResult(){
+    const api = axios.create({
+      baseURL: 'http://localhost:8000'  // 백엔드 서버의 주소와 포트를 baseURL로 설정
+    });
+    const location = useLocation();
+    const user_id = location.state.id;
+    const levels = location.state.value;
+    const number = location.state.number;
+    const code = location.state.code;
+    const accuracy = location.state.accuracy;
+    const [readability, setReadability] = useState('');
+    const call_gpt = async(e) =>{
+      try {
+        const temp= await api.post('/api/eval_code/', {
+          code: code
+      });
+      setReadability(temp.data.evaluation);
+    } catch (e) {
+
+    }
+  };
+  
+  useEffect(() => {
+      call_gpt();
+  }, []);
+  
 
     const movePage = useNavigate();
 
     function goHome(){
         // alert('go home');
-        movePage('/Levels')
+        movePage('/Levels',{state : {id : user_id}});
     }
 
     function goEditor(){
       // alert('go Editor');
-      movePage('/EditorPage');
+      movePage('/EditorPage', {state : {id : user_id, value : levels, number : number}});
     }
+    
 
+
+    // DUMMY_DATA.accuracy는 submit 누른 시점에서 평가 이후, 상속하도록!!!!!
     return(
         <ResultContainer>
             <ResultTitle > RESULT </ResultTitle>
@@ -67,11 +96,11 @@ function ViewResult(){
             <br></br>
             <br></br>
             <h2>Accuracy</h2>
-            <p>{DUMMY_DATA.accuracy}</p>
+            <p>{accuracy}</p>
             <br></br>
             <br></br>
             <h2>Code Readability</h2>
-            <p>{DUMMY_DATA.code_readability}</p>
+            <p>{readability}</p>
             <br></br>
             <br></br>
             <br></br>

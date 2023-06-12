@@ -1,9 +1,9 @@
 import './App.css';
 import styled from "styled-components";
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import dummy from './dummyData.json';
-
+import axios from 'axios';
 
 const BottomContainer = styled.span`
   width: 100%;
@@ -117,7 +117,9 @@ const ProblemFormBtn = styled.button`
     background-color: #aceb7f;
   }
 `;
-
+const api = axios.create({
+  baseURL: 'http://localhost:8000'  // 백엔드 서버의 주소와 포트를 baseURL로 설정
+});
 //문제 페이지
 function Problems() {
   //페이지 이동
@@ -132,7 +134,7 @@ function Problems() {
   };
 
   const navigateToLevels = () => {
-      navigate("/Levels");
+      navigate("/Levels",{state : {id : user_id}});
   };
 
   const [form, setForm] = useState();
@@ -145,11 +147,32 @@ function Problems() {
   };*/
 
   //url 매개변수 추출
-  const { levels } = useParams();
   
+  const location = useLocation();
+  
+  const user_id = location.state.id;
+  
+  const levels = location.state.value;
+  
+  const [response_data, setResponseData] = useState([]);
+  const handleButtonClick = async () => {
+    try {
+      const response = await api.post('/api/data/');
+      const response_data=response.data;
+      setResponseData(response_data);
+      
+      
+    } catch (error) {
+      
+    }
+  };
+  useEffect(() => {
+    handleButtonClick();
+  }, []);
   //levels값과 일치하는 문제들을 필터링
-  const levelList = dummy.problems.filter(level => 
+  const levelList = response_data.filter(level => 
     level.level === levels);
+    
     
   //문제 색상 설명란
   const Explain = {data:[
@@ -160,39 +183,57 @@ function Problems() {
 
 
   //에디터로 이동
-  function gotoEditor(){
-    navigate('/EditorPage');
-  }
+  
 
   //정보 백엔드로 보낸 후 에디터 페이지로 이동
   const handleProblem = (e, number) => {
     e.preventDefault();
-    console.log(number);
+    
   };
 
   
     //onclick 실행 시 작동해야 하는 것들
+  
   const onClickExecute = (e, number) => {
-      gotoEditor();
-      handleProblem(e, number);
+    handleProblem(e, number);
+    try {
+      const response = api.post('/api/seen/', {
+        level: levels,
+        number: number,
+        user_id: user_id
+    })}
+    catch(e)
+    {
+
+    }
+    navigate('/EditorPage', {state : {id : user_id, value : levels, number : number}});
   };
 
   //현재 사용자의 닉네임 설정
   useEffect(() => {
-    setCurrentUserNickname(dummy.users[0].nickname);
+    setCurrentUserNickname(user_id);
   }, []);
-
-  //토글이 안될 것 같아서 일단 주석
-  /*
-  let [read, setRead] = useState("");
-
-  const toggleActive = (e) => {
-    setRead((prev) => {
-      return e.target.value;
-    });
-  };*/
   
-
+  function checkStringInList(list, target) {
+   
+    
+    if (list)
+    {
+      var list2 = list;
+      
+      if (list2.includes(target)) {
+        
+        return true;
+      } else {
+        return false;
+      }
+    }
+    else{
+      
+      return false;
+    }
+  }
+  
   return (
     <div className="App">
       <header className='App-header'>
@@ -216,7 +257,7 @@ function Problems() {
               level={level.level} 
               key={level.id} 
               onClick={(e) => onClickExecute(e, level.number)}
-              className={(level.accuracy === 100 ? "correct" : "") || (level.seen === true ? "seen" : "")}>
+              className={(checkStringInList(response_data[level.id].accuracy,user_id) === true ? "correct" : "") || (checkStringInList(response_data[level.id].seen,user_id) === true ? "seen" : "")}>
               {level.level} - {level.number}</ProblemFormBtn>
             ))}
             

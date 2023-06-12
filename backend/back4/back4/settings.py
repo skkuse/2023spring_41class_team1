@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 #AUTH_USER_MODEL = 'users.CustomUser'
 INSTALLED_APPS = [
+    
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -40,8 +41,11 @@ INSTALLED_APPS = [
     "users",
     'corsheaders',
     'rest_framework',
-    
+    "back4",
+    "compiler",
+    "gpt"
 ]
+# LOGIN_URL = '/api/login/'
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',

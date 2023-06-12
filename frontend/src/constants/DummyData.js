@@ -8,7 +8,8 @@ export const DUMMY_DATA = {
     { input: 0, output: 1 },
   ],
   initial_code : '#include <stdio.h>    \nint main() {\n\tint N, fact=1;\n\tscanf("%d", &N);\n\tfor(int i=1; i<=N; i++) {\n\t\tfact *= i;\n\t}\n\tprintf("%d", fact);\n\treturn 0;\n}',
-  execution_result : 2,
+  execution_correct_result : '1, 2, 3',
+  execution_incorrect_result : '',
   hint : "팩토리얼",
   accuracy : "accuracy is ...",
   code_readability : "code readability is ..."
