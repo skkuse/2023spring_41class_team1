@@ -162,7 +162,7 @@ def gpt_eval(code):
     assets_path = Path(__file__).resolve().parent / 'assets'
     prompt_path = assets_path / 'roleplay_prompt.txt'
     answer_path = assets_path / 'roleplay_answer.txt'
-    openai.api_key = "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"
+    openai.api_key = "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"
     with prompt_path.open('r') as f:
         prompt = f.read().strip()
     with answer_path.open('r') as f:
